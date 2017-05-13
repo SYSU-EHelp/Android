@@ -33,8 +33,8 @@ public class HomeActivity extends AppCompatActivity {
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add("求助", AskFragment.class)
-                .add("提问", HelpFragment.class)
+                .add("求助", HelpFragment.class)
+                .add("提问", AskFragment.class)
                 .add("状态", StateFragment.class)
                 .create());
 

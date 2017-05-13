@@ -158,7 +158,7 @@ public class EditHelpActivity extends AppCompatActivity {
                 } else {
                     //定位失败
 //                    sb.append("定位失败" + "\n");
-//                    sb.append("错误码:" + location.getErrorCode() + "\n");
+                    sb.append("错误码:" + location.getErrorCode() + "\n");
 //                    sb.append("错误信息:" + location.getErrorInfo() + "\n");
 //                    sb.append("错误描述:" + location.getLocationDetail() + "\n");
                     Toast.makeText(EditHelpActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
