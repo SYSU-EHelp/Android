@@ -109,8 +109,7 @@ public class EditHelpActivity extends AppCompatActivity {
                     Toast.makeText(EditHelpActivity.this, "找不到您输入的求助地点，请重新输入", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(EditHelpActivity.this, "发求助成功", Toast.LENGTH_SHORT).show();
-                    // 跳转至正在求助页面，还没写那部分，暂时跳转至主页
-                    Intent intent = new Intent(EditHelpActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(EditHelpActivity.this, HelpStateActivity.class);
                     startActivity(intent);
                     finish();
                 }

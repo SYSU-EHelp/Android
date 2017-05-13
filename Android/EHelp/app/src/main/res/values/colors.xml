@@ -7,4 +7,5 @@
     <color name = "buttonText">#FFFFFF</color>
     <color name="mGray">#888888</color>
     <color name="mLightGray">#DCDCDC</color>
+    <color name="grayBackground">#F0F0F0</color>
 </resources>

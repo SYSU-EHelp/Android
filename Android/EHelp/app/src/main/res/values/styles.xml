@@ -59,4 +59,9 @@
         <item name="android:windowExitAnimation">@anim/dialog_out_anim</item>
     </style>
 
+    <style name="normalTextView">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/mainTextSize</item>
+    </style>
+
 </resources>

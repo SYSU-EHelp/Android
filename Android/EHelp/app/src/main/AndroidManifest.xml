@@ -41,7 +41,8 @@
         <activity android:name=".Register2" />
         <activity android:name=".Information" />
         <activity android:name=".EditHelpActivity" />
-        <activity android:name=".EmergencyContact"></activity>
+        <activity android:name=".EmergencyContact" />
+        <activity android:name=".HelpStateActivity" />
     </application>
 
 </manifest>
