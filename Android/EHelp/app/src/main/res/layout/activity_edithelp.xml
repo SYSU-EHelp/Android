@@ -77,13 +77,27 @@
             android:paddingTop="15dp"
             android:textSize="@dimen/mainTextSize" />
 
-        <TextView
-            android:id="@+id/tv_useloc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="使用定位"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/mainTextSize" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@mipmap/location"/>
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_useloc"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="使用定位"-->
+            <!--android:textColor="@color/colorAccent"-->
+            <!--android:textSize="@dimen/mainTextSize" />-->
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@color/mGray"
+        android:textSize="12sp"
+        android:text="提示：求助地点为您的当前位置，建议您清晰描述"/>
 
 </LinearLayout>

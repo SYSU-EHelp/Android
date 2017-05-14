@@ -88,6 +88,7 @@ public class HelpDetailActivity extends AppCompatActivity {
                         btn_gohelp.setClickable(false);
                         btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
                         btn_gohelp.setBackgroundColor(R.color.mGray);
+                        tv_phone.setVisibility(View.VISIBLE);
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

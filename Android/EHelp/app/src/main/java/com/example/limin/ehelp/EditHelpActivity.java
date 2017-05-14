@@ -1,11 +1,23 @@
 package com.example.limin.ehelp;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +28,9 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yunzhao on 2017/5/10.
@@ -32,13 +47,31 @@ public class EditHelpActivity extends AppCompatActivity {
     private TextView tv_wordcount;
     private EditText et_helpcontent;
     private EditText et_helplocation;
-    private TextView tv_useloc;
 
     // 高德地图
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
 
-    private String curLoc = "";
+    private String curLocStr = "正在获取定位...";
+    private boolean isLocEmpty = true;
+    private Location curLoc = null;
+
+    /**
+     * 需要进行检测的权限数组
+     */
+    protected String[] needPermissions = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//            Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
+
+    private static final int PERMISSON_REQUESTCODE = 0;
+
+    /**
+     * 判断是否需要检测，防止不停的弹框
+     */
+    private boolean isNeedCheck = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,9 +87,7 @@ public class EditHelpActivity extends AppCompatActivity {
         // 更新求助标题字数统计
         et_helptitle.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -64,16 +95,7 @@ public class EditHelpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        tv_useloc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                et_helplocation.setText(curLoc);
-            }
+            public void afterTextChanged(Editable editable) {}
         });
 
     }
@@ -105,8 +127,6 @@ public class EditHelpActivity extends AppCompatActivity {
                     Toast.makeText(EditHelpActivity.this, "求助描述不能为空", Toast.LENGTH_SHORT).show();
                 } else if (et_helplocation.getText().toString().isEmpty()) {
                     Toast.makeText(EditHelpActivity.this, "求助地点不能为空", Toast.LENGTH_SHORT).show();
-                } else if (!isValidLoc(et_helplocation.getText().toString())) {
-                    Toast.makeText(EditHelpActivity.this, "找不到您输入的求助地点，请重新输入", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(EditHelpActivity.this, "发求助成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EditHelpActivity.this, HelpStateActivity.class);
@@ -115,11 +135,6 @@ public class EditHelpActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private boolean isValidLoc(String mLoc) {
-
-        return true;
     }
 
     private void startLocation(){
@@ -151,23 +166,30 @@ public class EditHelpActivity extends AppCompatActivity {
         @Override
         public void onLocationChanged(AMapLocation location) {
             if (null != location) {
+                // 更新当前位置
+                curLoc = location;
+
                 StringBuffer sb = new StringBuffer();
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
                 if(location.getErrorCode() == 0){
-                    sb.append(location.getAddress());
+                    //sb.append(location.getAddress());
+                    sb.append(location.getDistrict());
+                    sb.append(location.getStreet());
+                    //sb.append(location.getDescription());
                 } else {
                     //定位失败
-//                    sb.append("定位失败" + "\n");
-                    sb.append("错误码:" + location.getErrorCode() + "\n");
+//                    sb.append("错误码:" + location.getErrorCode() + "\n");
 //                    sb.append("错误信息:" + location.getErrorInfo() + "\n");
 //                    sb.append("错误描述:" + location.getLocationDetail() + "\n");
-                    Toast.makeText(EditHelpActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(EditHelpActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
                 }
-                //定位之后的回调时间
-                //sb.append("回调时间: " + PositionUtils.formatUTC(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss") + "\n");
 
-                //解析定位结果，
-                curLoc = sb.toString();
+                curLocStr = sb.toString();
+                if (isLocEmpty) {
+                    et_helplocation.setText(curLocStr);
+                    isLocEmpty = false;
+                }
+
             } else {
                 Toast.makeText(EditHelpActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
             }
@@ -179,7 +201,7 @@ public class EditHelpActivity extends AppCompatActivity {
         mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
         mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
         mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        mOption.setInterval(5000);//可选，设置定位间隔。默认为2秒
+        mOption.setInterval(10000);//可选，设置定位间隔。默认为2秒
         mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
         mOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
         mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
@@ -195,7 +217,103 @@ public class EditHelpActivity extends AppCompatActivity {
         tv_wordcount = (TextView) findViewById(R.id.tv_wordcount);
         et_helpcontent = (EditText) findViewById(R.id.et_helpcontent);
         et_helplocation = (EditText) findViewById(R.id.et_helplocation);
-        tv_useloc = (TextView) findViewById(R.id.tv_useloc);
+    }
+
+    /**
+     * 检查权限
+     *
+     * @param
+     * @since 2.5.0
+     */
+    private void checkPermissions(String... permissions) {
+        //获取权限列表
+        List<String> needRequestPermissonList = findDeniedPermissions(permissions);
+        if (null != needRequestPermissonList
+                && needRequestPermissonList.size() > 0) {
+            //list.toarray将集合转化为数组
+            ActivityCompat.requestPermissions(this,
+                    needRequestPermissonList.toArray(new String[needRequestPermissonList.size()]),
+                    PERMISSON_REQUESTCODE);
+        }
+    }
+
+    /**
+     * 获取权限集中需要申请权限的列表
+     *
+     * @param permissions
+     * @return
+     * @since 2.5.0
+     */
+    private List<String> findDeniedPermissions(String[] permissions) {
+        List<String> needRequestPermissonList = new ArrayList<String>();
+        //for (循环变量类型 循环变量名称 : 要被遍历的对象)
+        for (String perm : permissions) {
+            if (ContextCompat.checkSelfPermission(this,
+                    perm) != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, perm)) {
+                needRequestPermissonList.add(perm);
+            }
+        }
+        return needRequestPermissonList;
+    }
+
+    /**
+     * 检测是否说有的权限都已经授权
+     *
+     * @param grantResults
+     * @return
+     * @since 2.5.0
+     */
+    private boolean verifyPermissions(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] paramArrayOfInt) {
+        if (requestCode == PERMISSON_REQUESTCODE) {
+            if (!verifyPermissions(paramArrayOfInt)) {      //没有授权
+                showMissingPermissionDialog();              //显示提示信息
+                isNeedCheck = false;
+            }
+        }
+    }
+
+    /**
+     * 显示提示信息
+     *
+     * @since 2.5.0
+     */
+    private void showMissingPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("发求助需要使用手机的定位权限");
+
+        // 拒绝, 退出应用
+        builder.setNegativeButton("取消求助",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+        builder.setPositiveButton("设置",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        checkPermissions(needPermissions);
+                    }
+                });
+
+        builder.setCancelable(false);
+        builder.show();
     }
 
     @Override
@@ -206,7 +324,12 @@ public class EditHelpActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        if (isNeedCheck) {
+            checkPermissions(needPermissions);
+        }
         startLocation();
         super.onResume();
     }
+
+
 }

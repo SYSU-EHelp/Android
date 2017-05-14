@@ -1,8 +1,10 @@
 package com.example.limin.ehelp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -52,10 +54,25 @@ public class HelpStateActivity extends AppCompatActivity {
         btn_finishhelpevent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 应跳转至求助详情页面的事件结束状态，该页面尚未完成
-                Intent intent = new Intent(HelpStateActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
+                //dialog参数设置
+                AlertDialog.Builder builder=new AlertDialog.Builder(HelpStateActivity.this);
+                builder.setTitle("提示"); //设置标题
+                builder.setMessage("您确定结束求助?"); //设置内容
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(HelpStateActivity.this, HelpDetailActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
             }
         });
     }
