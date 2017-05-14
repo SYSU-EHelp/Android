@@ -1,15 +1,27 @@
 package com.example.limin.ehelp;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -38,6 +50,9 @@ public class HelpDetailActivity extends AppCompatActivity {
     private MapView map;
     private AMap aMap = null;
     private MyLocationStyle myLocationStyle;
+    private UiSettings mUiSettings;//定义一个UiSettings对象
+    private static final int LOCATION_PERMISSION_CODE = 100;
+    private static final int STORAGE_PERMISSION_CODE = 101;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,14 +69,37 @@ public class HelpDetailActivity extends AppCompatActivity {
             aMap = map.getMap();
         }
 
+        mUiSettings = aMap.getUiSettings();//实例化UiSettings类对象
+        mUiSettings.setZoomControlsEnabled(false);
 
-        myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-        aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-        //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
-        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+        addMarker();
 
+        btn_gohelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //dialog参数设置
+                AlertDialog.Builder builder=new AlertDialog.Builder(HelpDetailActivity.this);  //先得到构造器
+                builder.setTitle("提示"); //设置标题
+                builder.setMessage("是否确认去帮TA?"); //设置内容
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        btn_gohelp.setClickable(false);
+                        btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
+                        btn_gohelp.setBackgroundColor(R.color.mGray);
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
+
+            }
+        });
     }
 
     private void setTitle() {
@@ -93,6 +131,15 @@ public class HelpDetailActivity extends AppCompatActivity {
         btn_gohelp = (Button) findViewById(R.id.btn_gohelp);
     }
 
+    private void addMarker() {
+        LatLng latLng = new LatLng(22.95, 113.36);
+        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("帮助地点：").snippet("广州大学城中山大学明德园6号"));
+        marker.showInfoWindow();
+
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -117,4 +164,6 @@ public class HelpDetailActivity extends AppCompatActivity {
         //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
         map.onSaveInstanceState(outState);
     }
+
+
 }
