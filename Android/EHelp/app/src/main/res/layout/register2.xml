@@ -3,6 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/layout_registerbar2"/>
+
     <EditText
         android:id="@+id/user"
         android:layout_height="wrap_content"
@@ -37,12 +39,7 @@
         android:inputType="textPassword">
     </EditText>
 
-    <Button
-        android:id="@+id/done"
-        style="@style/button"
-        android:background="@drawable/button"
 
-        android:text="完成" />
 
 
 </LinearLayout>

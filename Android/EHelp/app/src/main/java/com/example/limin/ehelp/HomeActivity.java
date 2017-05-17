@@ -52,6 +52,16 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        createBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, EmergencyHelp.class);
+                startActivity(intent);
+                return true;
+            }
+
+        });
+
     }
 
     private void showDialog() {

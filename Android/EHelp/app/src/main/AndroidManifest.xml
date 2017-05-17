@@ -69,6 +69,8 @@
             android:name=".networkservice.APITestActivity"
             android:label="@string/title_activity_apitest"
             android:theme="@style/AppTheme"></activity>
+
+        <activity android:name=".EmergencyHelp" />
     </application>
 
 </manifest>
