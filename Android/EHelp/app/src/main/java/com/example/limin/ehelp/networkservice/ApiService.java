@@ -33,6 +33,10 @@ public interface ApiService {
                                          @Field("username") String username,
                                          @Field("password") String password);
 
+    @POST("/api/users/login")
+    @FormUrlEncoded
+    Call<LoginResult> requestLogin(@Field("username") String username,
+                                   @Field("password") String password);
 
 
     static final Interceptor interceptor = new Interceptor() {

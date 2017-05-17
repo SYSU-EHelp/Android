@@ -60,7 +60,7 @@ public class APITestActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<RegisterResult> call = apiService.requestRegister("0862",
+                Call<RegisterResult> call = apiService.requestRegister("3892",
                         "18826234601", "aaaaaa", "bbbbbb");
                 call.enqueue(new Callback<RegisterResult>() {
                     @Override
@@ -81,9 +81,39 @@ public class APITestActivity extends AppCompatActivity {
 
                     }
                 });
-
             }
         });
+
+        // 登录
+
+        Button login = (Button) findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<LoginResult> call = apiService.requestLogin("aaaaaa", "bbbbbb");
+                call.enqueue(new Callback<LoginResult>() {
+                    @Override
+                    public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        Toast.makeText(APITestActivity.this, ToastUtils.LOGIN_SUCCESS + response
+                                .body().data.id, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResult> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
 
     }
 }
