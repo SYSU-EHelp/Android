@@ -16,42 +16,42 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name = "tableLayout">
-        <item name = "android:layout_width">match_parent</item>
-        <item name = "android:layout_height">wrap_content</item>
-        <item name = "android:layout_marginLeft">@dimen/marginLeft</item>
+    <style name="tableLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/marginLeft</item>
     </style>
 
 
-    <style name = "image_style">
-        <item name = "android:layout_width">wrap_content</item>
-        <item name = "android:layout_height">wrap_content</item>
-        <item name = "android:layout_gravity">center</item>
-        <item name = "android:layout_margin">@dimen/margin</item>
+    <style name="image_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">@dimen/margin</item>
     </style>
 
-    <style name = "tablerow">
-        <item name = "android:layout_marginRight">@dimen/margin</item>
-        <item name = "android:layout_marginBottom">@dimen/marginSmall</item>
+    <style name="tablerow">
+        <item name="android:layout_marginRight">@dimen/margin</item>
+        <item name="android:layout_marginBottom">@dimen/marginSmall</item>
     </style>
 
-    <style name = "text_style">
-        <item name = "android:layout_width">wrap_content</item>
-        <item name = "android:layout_height">wrap_content</item>
-        <item name ="android:layout_gravity">right|center_vertical</item>
+    <style name="text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">right|center_vertical</item>
     </style>
 
-    <style name = "input_box">
-        <item name = "android:layout_height">wrap_content</item>
+    <style name="input_box">
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name = "button">
-        <item name = "android:layout_height">wrap_content</item>
-        <item name = "android:layout_width">match_parent</item>
-        <item name = "android:layout_marginRight">30dp</item>
-        <item name = "android:layout_marginLeft">30dp</item>
-        <item name = "android:layout_marginTop">20dp</item>
-        <item name = "android:textColor">@color/buttonText</item>
+    <style name="button">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textColor">@color/buttonText</item>
     </style>
 
     <style name="main_menu_animstyle">
@@ -63,5 +63,9 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/mainTextSize</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

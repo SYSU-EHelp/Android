@@ -61,4 +61,10 @@
         android:textSize="@dimen/textSize"
         android:layout_marginRight="30dp"
         android:layout_marginTop="15dp"/>
+
+    <Button
+        android:id="@+id/apiTest"
+        style="@style/button"
+        android:background="@drawable/button"
+        android:text="api测试" />
 </LinearLayout>
