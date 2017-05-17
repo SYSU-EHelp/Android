@@ -42,7 +42,9 @@ public interface ApiService {
     @FormUrlEncoded
     Call<LoginResult> requestAutoLogin();
 
-    
+    @POST("/api/users/logout")
+    Call<EmptyResult> requestLogout();
+
     static final Interceptor interceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
