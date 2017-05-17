@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.limin.ehelp.R;
+import com.example.limin.ehelp.utility.ToastUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +35,15 @@ public class APITestActivity extends AppCompatActivity {
                 call.enqueue(new Callback<SendCodeResult>() {
                     @Override
                     public void onResponse(Call<SendCodeResult> call, Response<SendCodeResult> response) {
-                        Toast.makeText(APITestActivity.this, "api", Toast.LENGTH_SHORT).show();
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        Toast.makeText(APITestActivity.this, response.body().data.code, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
