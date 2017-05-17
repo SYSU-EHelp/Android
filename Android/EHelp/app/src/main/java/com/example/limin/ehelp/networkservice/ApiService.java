@@ -26,6 +26,14 @@ public interface ApiService {
     @FormUrlEncoded
     Call<SendCodeResult> requestSendCode(@Field("phone") String phone);
 
+    @POST("/api/users/register")
+    @FormUrlEncoded
+    Call<RegisterResult> requestRegister(@Field("code") String code,
+                                         @Field("phone") String phone,
+                                         @Field("username") String username,
+                                         @Field("password") String password);
+
+
 
     static final Interceptor interceptor = new Interceptor() {
         @Override

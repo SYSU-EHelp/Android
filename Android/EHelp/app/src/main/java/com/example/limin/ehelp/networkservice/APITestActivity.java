@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.limin.ehelp.R;
+import com.example.limin.ehelp.utility.ToastUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +35,15 @@ public class APITestActivity extends AppCompatActivity {
                 call.enqueue(new Callback<SendCodeResult>() {
                     @Override
                     public void onResponse(Call<SendCodeResult> call, Response<SendCodeResult> response) {
-                        Toast.makeText(APITestActivity.this, "api", Toast.LENGTH_SHORT).show();
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        Toast.makeText(APITestActivity.this, response.body().data.code, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -45,5 +54,36 @@ public class APITestActivity extends AppCompatActivity {
 
             }
         });
+
+        // --- 注册
+        Button register = (Button) findViewById(R.id.register);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<RegisterResult> call = apiService.requestRegister("0862",
+                        "18826234601", "aaaaaa", "bbbbbb");
+                call.enqueue(new Callback<RegisterResult>() {
+                    @Override
+                    public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        Toast.makeText(APITestActivity.this, ToastUtils.REGISTER_SUCCESS, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<RegisterResult> call, Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+
     }
 }
