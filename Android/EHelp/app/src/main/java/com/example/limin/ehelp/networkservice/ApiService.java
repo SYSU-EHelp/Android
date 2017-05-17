@@ -38,7 +38,11 @@ public interface ApiService {
     Call<LoginResult> requestLogin(@Field("username") String username,
                                    @Field("password") String password);
 
+    @POST("/api/users/autologin")
+    @FormUrlEncoded
+    Call<LoginResult> requestAutoLogin();
 
+    
     static final Interceptor interceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
