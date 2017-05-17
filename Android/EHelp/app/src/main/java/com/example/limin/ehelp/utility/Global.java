@@ -12,7 +12,7 @@ public class Global {
         }
         return mInstance;
     }
-    public String baseUrl = "";
+    public String baseUrl = "http://119.29.246.121:8080";
     private Global() {
     }
 }

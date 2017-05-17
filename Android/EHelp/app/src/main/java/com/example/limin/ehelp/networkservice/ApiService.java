@@ -9,14 +9,23 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
 
 /**
  * Created by Administrator on 2017/05/17.
  */
 
 public interface ApiService {
+
+    @POST("/api/users/sendCode")
+    @FormUrlEncoded
+    Call<SendCodeResult> requestSendCode(@Field("phone") String phone);
+
 
     static final Interceptor interceptor = new Interceptor() {
         @Override
