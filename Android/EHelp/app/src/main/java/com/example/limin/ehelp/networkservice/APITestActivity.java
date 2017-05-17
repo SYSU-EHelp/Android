@@ -21,6 +21,8 @@ public class APITestActivity extends AppCompatActivity {
     Button sendCode;
     private ApiService apiService;
 
+    private String code;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,10 +30,11 @@ public class APITestActivity extends AppCompatActivity {
         apiService = ApiService.retrofit.create(ApiService.class);
 
         sendCode = (Button) findViewById(R.id.sendCode);
+
         sendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<SendCodeResult> call = apiService.requestSendCode("18826234601");
+                Call<SendCodeResult> call = apiService.requestSendCode("13829180035");
                 call.enqueue(new Callback<SendCodeResult>() {
                     @Override
                     public void onResponse(Call<SendCodeResult> call, Response<SendCodeResult> response) {
@@ -43,6 +46,7 @@ public class APITestActivity extends AppCompatActivity {
                             ToastUtils.show(APITestActivity.this, response.body().errmsg);
                             return;
                         }
+                        code = response.body().data.code;
                         Toast.makeText(APITestActivity.this, response.body().data.code, Toast.LENGTH_SHORT).show();
                     }
 
@@ -60,8 +64,8 @@ public class APITestActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<RegisterResult> call = apiService.requestRegister("3892",
-                        "18826234601", "aaaaaa", "bbbbbb");
+                Call<RegisterResult> call = apiService.requestRegister(code,
+                        "13829180035", "aaaaaa", "bbbbbb");
                 call.enqueue(new Callback<RegisterResult>() {
                     @Override
                     public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
