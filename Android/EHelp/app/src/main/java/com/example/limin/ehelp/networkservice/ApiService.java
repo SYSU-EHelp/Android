@@ -9,14 +9,41 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
 
 /**
  * Created by Administrator on 2017/05/17.
  */
 
 public interface ApiService {
+
+    @POST("/api/users/sendCode")
+    @FormUrlEncoded
+    Call<SendCodeResult> requestSendCode(@Field("phone") String phone);
+
+    @POST("/api/users/register")
+    @FormUrlEncoded
+    Call<RegisterResult> requestRegister(@Field("code") String code,
+                                         @Field("phone") String phone,
+                                         @Field("username") String username,
+                                         @Field("password") String password);
+
+    @POST("/api/users/login")
+    @FormUrlEncoded
+    Call<LoginResult> requestLogin(@Field("username") String username,
+                                   @Field("password") String password);
+
+    @POST("/api/users/autologin")
+    @FormUrlEncoded
+    Call<LoginResult> requestAutoLogin();
+
+    @POST("/api/users/logout")
+    Call<EmptyResult> requestLogout();
 
     static final Interceptor interceptor = new Interceptor() {
         @Override

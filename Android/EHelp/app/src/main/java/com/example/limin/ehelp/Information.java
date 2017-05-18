@@ -19,8 +19,6 @@ public class Information extends AppCompatActivity {
     private EditText username;
     private EditText phone;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +35,7 @@ public class Information extends AppCompatActivity {
     private void setTitle() {
         btn_back = (Button) findViewById(R.id.btn_back);
         title = (TextView) findViewById(R.id.tv_title);
+        next = (TextView) findViewById(R.id.tv_nextope);
         username = (EditText)findViewById(R.id.username);
         phone = (EditText)findViewById(R.id.phone);
         next = (TextView) findViewById(R.id.tv_nextope);

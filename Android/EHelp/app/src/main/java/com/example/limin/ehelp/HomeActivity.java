@@ -52,6 +52,16 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        createBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, EmergencyHelp.class);
+                startActivity(intent);
+                return true;
+            }
+
+        });
+
     }
 
     private void showDialog() {
@@ -93,6 +103,7 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+<<<<<<< HEAD
         if (id ==R.id.action_userinfo) {
             Intent i=new Intent(this,Information.class) ;
             startActivity(i);
@@ -104,10 +115,19 @@ public class HomeActivity extends AppCompatActivity {
             Intent i=new Intent(this,EmergencyContact.class) ;
             startActivity(i);
 
+=======
+        if (id == R.id.action_userinfo) {
+            Intent intent = new Intent(HomeActivity.this, Information.class);
+            startActivity(intent);
             return true;
         }
 
-        if (id ==R.id.action_logout) {
+        if (id == R.id.action_urgencycontact) {
+>>>>>>> master
+            return true;
+        }
+
+        if (id == R.id.action_logout) {
             finish();
             return true;
         }

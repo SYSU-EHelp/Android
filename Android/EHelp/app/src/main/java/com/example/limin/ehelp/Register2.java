@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +20,7 @@ public class Register2 extends AppCompatActivity {
         setContentView(R.layout.register2);
         Bundle bundle = this.getIntent().getExtras();
 
-        Button done = (Button)findViewById(R.id.done);
+        TextView done = (TextView) findViewById(R.id.done);
 
         final EditText mima = (EditText)findViewById(R.id.mima);
         final EditText againmima = (EditText)findViewById(R.id.againmima);

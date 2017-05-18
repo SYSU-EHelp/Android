@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.limin.ehelp.networkservice.APITestActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -44,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,Register1.class);
+                startActivity(intent);
+            }
+        });
+
+
+        // -------------测试部分--------------
+        Button apiTest = (Button) findViewById(R.id.apiTest);
+        apiTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,APITestActivity.class);
                 startActivity(intent);
             }
         });
