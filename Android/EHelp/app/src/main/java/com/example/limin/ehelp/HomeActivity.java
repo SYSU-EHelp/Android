@@ -94,13 +94,16 @@ public class HomeActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id ==R.id.action_userinfo) {
-            /*Intent i=new Intent(this,Information.class) ;
-            startActivity(i);*/
-            //这里的跳转有问题,未解决!!!
+            Intent i=new Intent(this,Information.class) ;
+            startActivity(i);
+
             return true;
         }
 
         if (id ==R.id.action_urgencycontact) {
+            Intent i=new Intent(this,EmergencyContact.class) ;
+            startActivity(i);
+
             return true;
         }
 

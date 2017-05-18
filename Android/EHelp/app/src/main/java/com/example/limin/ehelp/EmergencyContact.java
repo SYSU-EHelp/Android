@@ -25,8 +25,9 @@ public class EmergencyContact extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_contact);
+        setTitle();
 
-        lv = (ListView)findViewById(R.id.emergency);
+        /*lv = (ListView)findViewById(R.id.emergency);
 
         List<Map<String, Object>> contact = new ArrayList<>();
         String[] username = new String[] {"张三","李四"};
@@ -38,16 +39,17 @@ public class EmergencyContact extends AppCompatActivity {
             contact.add(temp);
 
         }
-
         SimpleAdapter simpleAdapter = new SimpleAdapter(this, contact, R.layout.contact_item,
                 new String[] {"username", "phone"}, new int[] {R.id.username, R.id.phone});
-        lv.setAdapter(simpleAdapter);
+        lv.setAdapter(simpleAdapter);*/
     }
 
     private void setTitle() {
         btn_back = (Button) findViewById(R.id.btn_back);
         title = (TextView) findViewById(R.id.tv_title);
+        next = (TextView) findViewById(R.id.tv_nextope);
 
+        next.setText("");
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
