@@ -103,18 +103,17 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id ==R.id.action_userinfo) {
-            /*Intent i=new Intent(this,Information.class) ;
-            startActivity(i);*/
-            //这里的跳转有问题,未解决!!!
+        if (id == R.id.action_userinfo) {
+            Intent intent = new Intent(HomeActivity.this, Information.class);
+            startActivity(intent);
             return true;
         }
 
-        if (id ==R.id.action_urgencycontact) {
+        if (id == R.id.action_urgencycontact) {
             return true;
         }
 
-        if (id ==R.id.action_logout) {
+        if (id == R.id.action_logout) {
             finish();
             return true;
         }
