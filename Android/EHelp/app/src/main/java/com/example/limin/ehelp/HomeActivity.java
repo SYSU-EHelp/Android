@@ -103,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-<<<<<<< HEAD
+
         if (id ==R.id.action_userinfo) {
             Intent i=new Intent(this,Information.class) ;
             startActivity(i);
@@ -114,16 +114,6 @@ public class HomeActivity extends AppCompatActivity {
         if (id ==R.id.action_urgencycontact) {
             Intent i=new Intent(this,EmergencyContact.class) ;
             startActivity(i);
-
-=======
-        if (id == R.id.action_userinfo) {
-            Intent intent = new Intent(HomeActivity.this, Information.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_urgencycontact) {
->>>>>>> master
             return true;
         }
 
