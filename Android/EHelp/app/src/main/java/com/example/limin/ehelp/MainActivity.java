@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                     bundle.putString("password", password.getText().toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
