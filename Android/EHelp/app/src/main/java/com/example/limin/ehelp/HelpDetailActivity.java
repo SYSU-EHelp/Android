@@ -45,6 +45,7 @@ public class HelpDetailActivity extends AppCompatActivity {
     private TextView tv_time;
     private TextView tv_address;
     private Button btn_gohelp;
+    private TextView tv_helpernum;
 
     // 地图
     private MapView map;
@@ -130,6 +131,7 @@ public class HelpDetailActivity extends AppCompatActivity {
         tv_address = (TextView) findViewById(R.id.tv_address);
         map = (MapView) findViewById(R.id.map);
         btn_gohelp = (Button) findViewById(R.id.btn_gohelp);
+        tv_helpernum = (TextView) findViewById(R.id.tv_helpernum);
     }
 
     private void addMarker() {

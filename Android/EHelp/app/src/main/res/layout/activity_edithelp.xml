@@ -45,7 +45,7 @@
     <EditText
         android:id="@+id/et_helpcontent"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:background="@null"
         android:gravity="start"
         android:hint="求助描述"
@@ -66,38 +66,79 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
-        <EditText
-            android:id="@+id/et_helplocation"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="求助地点"
+            android:textColor="@android:color/black"
+            android:text="我需要"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
             android:textSize="@dimen/mainTextSize" />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@mipmap/location"/>
+        <EditText
+            android:id="@+id/et_helpernum"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:inputType="number"
+            android:gravity="center"/>
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_useloc"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="使用定位"-->
-            <!--android:textColor="@color/colorAccent"-->
-            <!--android:textSize="@dimen/mainTextSize" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="个人的帮助"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:textSize="@dimen/mainTextSize" />
     </LinearLayout>
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mLightGray" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:textColor="@color/mGray"
-        android:textSize="12sp"
-        android:text="提示：求助地点为您的当前位置，建议您清晰描述"/>
+        android:paddingRight="15dp">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@mipmap/location" />
+
+        <TextView
+            android:id="@+id/tv_helplocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="正在获取定位..."
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="13sp" />
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_useloc"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="使用定位"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:textSize="@dimen/mainTextSize" />-->
+    </LinearLayout>
+
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="15dp"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:textColor="@color/mGray"-->
+        <!--android:textSize="12sp"-->
+        <!--android:text="提示：求助地点为您的当前位置，建议您清晰描述"/>-->
 
 </LinearLayout>

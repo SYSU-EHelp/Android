@@ -46,14 +46,14 @@ public class EditHelpActivity extends AppCompatActivity {
     private EditText et_helptitle;
     private TextView tv_wordcount;
     private EditText et_helpcontent;
-    private EditText et_helplocation;
+    private TextView tv_helplocation;
+    private EditText et_helpernum;
 
     // 高德地图
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
 
     private String curLocStr = "正在获取定位...";
-    private boolean isLocEmpty = true;
     private Location curLoc = null;
 
     /**
@@ -125,8 +125,8 @@ public class EditHelpActivity extends AppCompatActivity {
                     Toast.makeText(EditHelpActivity.this, "求助标题不能超过20个字", Toast.LENGTH_SHORT).show();
                 } else if (et_helpcontent.getText().toString().isEmpty()) {
                     Toast.makeText(EditHelpActivity.this, "求助描述不能为空", Toast.LENGTH_SHORT).show();
-                } else if (et_helplocation.getText().toString().isEmpty()) {
-                    Toast.makeText(EditHelpActivity.this, "求助地点不能为空", Toast.LENGTH_SHORT).show();
+                } else if (et_helpernum.getText().toString().isEmpty()) {
+                    Toast.makeText(EditHelpActivity.this, "求助人数不能为空", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(EditHelpActivity.this, "发求助成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EditHelpActivity.this, HelpStateActivity.class);
@@ -175,7 +175,7 @@ public class EditHelpActivity extends AppCompatActivity {
                     //sb.append(location.getAddress());
                     sb.append(location.getDistrict());
                     sb.append(location.getStreet());
-                    //sb.append(location.getDescription());
+                    sb.append(location.getDescription());
                 } else {
                     //定位失败
 //                    sb.append("错误码:" + location.getErrorCode() + "\n");
@@ -185,10 +185,7 @@ public class EditHelpActivity extends AppCompatActivity {
                 }
 
                 curLocStr = sb.toString();
-                if (isLocEmpty) {
-                    et_helplocation.setText(curLocStr);
-                    isLocEmpty = false;
-                }
+                tv_helplocation.setText(curLocStr);
 
             } else {
                 Toast.makeText(EditHelpActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
@@ -216,7 +213,8 @@ public class EditHelpActivity extends AppCompatActivity {
         et_helptitle = (EditText) findViewById(R.id.et_helptitle);
         tv_wordcount = (TextView) findViewById(R.id.tv_wordcount);
         et_helpcontent = (EditText) findViewById(R.id.et_helpcontent);
-        et_helplocation = (EditText) findViewById(R.id.et_helplocation);
+        tv_helplocation = (TextView) findViewById(R.id.tv_helplocation);
+        et_helpernum = (EditText) findViewById(R.id.et_helpernum);
     }
 
     /**
