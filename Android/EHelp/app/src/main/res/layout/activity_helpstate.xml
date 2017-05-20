@@ -79,7 +79,7 @@
         android:id="@+id/btn_finishhelpevent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:background="@drawable/btnclickselector"
         android:text="结束求助"
         android:textColor="@android:color/white"
         android:textSize="@dimen/mainTextSize"

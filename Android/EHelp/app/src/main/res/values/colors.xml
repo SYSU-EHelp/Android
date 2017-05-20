@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#4a4a4a</color>
     <color name="colorAccent">#1abc9c</color>
     <color name = "buttonBackgroud">#1abc9c</color>
+    <color name="darkgreen">#15997F</color>
     <color name = "buttonText">#FFFFFF</color>
     <color name="mGray">#888888</color>
     <color name="mLightGray">#DCDCDC</color>
