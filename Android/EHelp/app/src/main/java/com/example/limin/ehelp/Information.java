@@ -38,6 +38,7 @@ public class Information extends AppCompatActivity {
         next = (TextView) findViewById(R.id.tv_nextope);
         username = (EditText)findViewById(R.id.username);
         phone = (EditText)findViewById(R.id.phone);
+        next = (TextView) findViewById(R.id.tv_nextope);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +56,7 @@ public class Information extends AppCompatActivity {
                 String ph = phone.getText().toString();
                 //这里需要将个人信息数据传入数据库
                 Toast.makeText(Information.this, "修改个人信息成功!", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
