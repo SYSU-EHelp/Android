@@ -110,7 +110,7 @@ public class APITestActivity extends AppCompatActivity {
                         }
                         // 维护cookir 和 记录id
                         CurrentUser.cookie = response.headers().get("Set-Cookie");
-                        CurrentUser.userId = response.body().data.id;
+                        CurrentUser.id = response.body().data.id;
                         SharedPreferences.Editor editor = getSharedPreferences("login_info", MODE_PRIVATE).edit();
                         editor.putInt("id", response.body().data.id);
                         editor.putString("cookit", CurrentUser.cookie);
@@ -189,7 +189,7 @@ public class APITestActivity extends AppCompatActivity {
                         editor.putInt("id", -1);
                         editor.putString("cookit", "");
                         editor.commit();
-                        CurrentUser.userId = -1;
+                        CurrentUser.id = -1;
                         CurrentUser.cookie = "";
 
                         Toast.makeText(APITestActivity.this, "已经退出登录", Toast.LENGTH_SHORT).show();
