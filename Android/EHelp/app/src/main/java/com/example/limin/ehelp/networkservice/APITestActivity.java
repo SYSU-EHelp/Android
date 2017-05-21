@@ -1,5 +1,6 @@
 package com.example.limin.ehelp.networkservice;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.limin.ehelp.R;
+import com.example.limin.ehelp.utility.CurrentUser;
 import com.example.limin.ehelp.utility.ToastUtils;
 
 import retrofit2.Call;
@@ -34,7 +36,7 @@ public class APITestActivity extends AppCompatActivity {
         sendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<SendCodeResult> call = apiService.requestSendCode("13829180035");
+                Call<SendCodeResult> call = apiService.requestSendCode("18826234601");
                 call.enqueue(new Callback<SendCodeResult>() {
                     @Override
                     public void onResponse(Call<SendCodeResult> call, Response<SendCodeResult> response) {
@@ -65,7 +67,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Call<RegisterResult> call = apiService.requestRegister(code,
-                        "13829180035", "aaaaaa", "bbbbbb");
+                        "18826234601", "aaaaaa", "bbbbbb");
                 call.enqueue(new Callback<RegisterResult>() {
                     @Override
                     public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
@@ -106,6 +108,13 @@ public class APITestActivity extends AppCompatActivity {
                             ToastUtils.show(APITestActivity.this, response.body().errmsg);
                             return;
                         }
+                        // 维护cookir 和 记录id
+                        CurrentUser.cookie = response.headers().get("Set-Cookit");
+                        CurrentUser.userId = response.body().data.id;
+                        SharedPreferences.Editor editor = getSharedPreferences("login_info", MODE_PRIVATE).edit();
+                        editor.putInt("id", response.body().data.id);
+                        editor.commit();
+
                         Toast.makeText(APITestActivity.this, ToastUtils.LOGIN_SUCCESS + response
                                 .body().data.id, Toast.LENGTH_SHORT).show();
                     }
