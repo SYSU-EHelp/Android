@@ -167,6 +167,43 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
+        //  退出登录
+        Button logout = (Button) findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<EmptyResult> call = apiService.requestLogout();
+                call.enqueue(new Callback<EmptyResult>() {
+                    @Override
+                    public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+
+                        SharedPreferences.Editor editor = getSharedPreferences("login_info", MODE_PRIVATE).edit();
+                        editor.putInt("id", -1);
+                        editor.putString("cookit", "");
+                        editor.commit();
+                        CurrentUser.userId = -1;
+                        CurrentUser.cookie = "";
+
+                        Toast.makeText(APITestActivity.this, "已经退出登录", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<EmptyResult> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+
 
     }
 }
