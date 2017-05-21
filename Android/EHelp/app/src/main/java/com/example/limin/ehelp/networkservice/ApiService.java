@@ -39,7 +39,6 @@ public interface ApiService {
                                    @Field("password") String password);
 
     @POST("/api/users/autologin")
-    @FormUrlEncoded
     Call<LoginResult> requestAutoLogin();
 
     @POST("/api/users/logout")

@@ -109,12 +109,52 @@ public class APITestActivity extends AppCompatActivity {
                             return;
                         }
                         // 维护cookir 和 记录id
-                        CurrentUser.cookie = response.headers().get("Set-Cookit");
+                        CurrentUser.cookie = response.headers().get("Set-Cookie");
                         CurrentUser.userId = response.body().data.id;
                         SharedPreferences.Editor editor = getSharedPreferences("login_info", MODE_PRIVATE).edit();
                         editor.putInt("id", response.body().data.id);
+                        editor.putString("cookit", CurrentUser.cookie);
                         editor.commit();
+                        ToastUtils.show(APITestActivity.this, CurrentUser.cookie);
 
+                        Toast.makeText(APITestActivity.this, ToastUtils.LOGIN_SUCCESS + response
+                                .body().data.id, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResult> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+        //  自动登录
+        Button autoLogin = (Button) findViewById(R.id.autologin);
+        autoLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //  先进行cookit 注入
+                String cookit = getSharedPreferences("login_info", MODE_PRIVATE).getString("cookit", "");
+                if (cookit == "") {
+                    ToastUtils.show(APITestActivity.this, "你还未来曾经登录");
+                    return;
+                }
+                CurrentUser.cookie = cookit;
+
+                Call<LoginResult> call = apiService.requestAutoLogin();
+                call.enqueue(new Callback<LoginResult>() {
+                    @Override
+                    public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
                         Toast.makeText(APITestActivity.this, ToastUtils.LOGIN_SUCCESS + response
                                 .body().data.id, Toast.LENGTH_SHORT).show();
                     }
