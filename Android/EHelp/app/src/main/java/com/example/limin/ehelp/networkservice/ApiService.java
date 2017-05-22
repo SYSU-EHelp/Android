@@ -1,5 +1,6 @@
 package com.example.limin.ehelp.networkservice;
 
+import com.example.limin.ehelp.bean.QuestionDetailBean;
 import com.example.limin.ehelp.utility.CurrentUser;
 import com.example.limin.ehelp.utility.Global;
 
@@ -16,6 +17,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by Administrator on 2017/05/17.
@@ -55,6 +57,10 @@ public interface ApiService {
 
     @GET("/api/questions")
     Call<QuestionsResult> requestQuestions();
+
+    @GET("/api/questions/{question_id}")
+    Call<QuestionDetailResult> requestQuestionDetail(@Path("question_id") int question_id);
+
 
 
     static final Interceptor interceptor = new Interceptor() {
