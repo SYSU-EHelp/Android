@@ -53,6 +53,10 @@ public interface ApiService {
     Call<EmptyResult> requestAddContact(@Field("username") String username,
                                         @Field("phone") String phone);
 
+    @GET("/api/questions")
+    Call<QuestionsResult> requestQuestions();
+
+
     static final Interceptor interceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {

@@ -285,6 +285,35 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
+        //  获取问题
+
+        Button questions = (Button) findViewById(R.id.questions);
+        questions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<QuestionsResult> call = apiService.requestQuestions();
+                call.enqueue(new Callback<QuestionsResult>() {
+                    @Override
+                    public void onResponse(Call<QuestionsResult> call, Response<QuestionsResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<QuestionsResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
 
 
 
