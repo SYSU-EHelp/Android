@@ -469,7 +469,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<EmptyResult> call = apiService.requestResponses(1);
+                Call<EmptyResult> call = apiService.requestResponsesHelp(1);
                 call.enqueue(new Callback<EmptyResult>() {
                     @Override
                     public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
@@ -491,6 +491,36 @@ public class APITestActivity extends AppCompatActivity {
                 });
             }
         });
+
+        //  请求结束求助响应
+        Button finishHelp = (Button) findViewById(R.id.finishHelp);
+        finishHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<EmptyResult> call = apiService.requestFinishHelp(1);
+                call.enqueue(new Callback<EmptyResult>() {
+                    @Override
+                    public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<EmptyResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
+
 
 
     }

@@ -83,7 +83,10 @@ public interface ApiService {
     Call<HelpDetailResult> requestHelpDetail(@Path("help_id") int help_id);
 
     @POST("/api/helps/{help_id}/responses")
-    Call<EmptyResult> requestResponses(@Path("help_id") int help_id);
+    Call<EmptyResult> requestResponsesHelp(@Path("help_id") int help_id);
+
+    @PATCH("/api/helps/{help_id}/finish")
+    Call<EmptyResult> requestFinishHelp(@Path("help_id") int help_id);
 
 
 
