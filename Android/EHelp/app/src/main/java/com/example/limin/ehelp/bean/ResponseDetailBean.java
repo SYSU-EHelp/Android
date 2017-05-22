@@ -6,7 +6,6 @@ import java.util.List;
  * Created by Administrator on 2017/05/23.
  */
 
-public class ResonseDetailBean {
-    public int num;
+public class ResponseDetailBean {
     List<ResponserBean> responser;
 }
