@@ -61,6 +61,11 @@ public interface ApiService {
     @GET("/api/questions/{question_id}")
     Call<QuestionDetailResult> requestQuestionDetail(@Path("question_id") int question_id);
 
+    @POST("/api/questions")
+    @FormUrlEncoded
+    Call<EmptyResult> requestAddQuestion(@Field("title") String  title,
+                                         @Field("description") String description);
+
 
 
     static final Interceptor interceptor = new Interceptor() {
