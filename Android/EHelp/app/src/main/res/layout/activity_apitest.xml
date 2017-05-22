@@ -90,6 +90,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:text="请求响应"
+                android:id="@+id/responses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 
 
