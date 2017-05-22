@@ -94,6 +94,8 @@ public interface ApiService {
                                   @Field("description") String description,
                                   @Field("address") String address);
 
+    @POST("/api/helps/{help_id}/responses")
+    Call<ResponseDetailResult> requestResponseDetail(@Path("help_id") int help_id);
 
 
     static final Interceptor interceptor = new Interceptor() {

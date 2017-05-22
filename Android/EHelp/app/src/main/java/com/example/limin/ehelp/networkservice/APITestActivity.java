@@ -550,6 +550,34 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
+        //  请求响应详情
+        Button responseDetail = (Button) findViewById(R.id.responseDetail);
+        responseDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<ResponseDetailResult> call = apiService.requestResponseDetail(1);
+                call.enqueue(new Callback<ResponseDetailResult>() {
+                    @Override
+                    public void onResponse(Call<ResponseDetailResult> call, Response<ResponseDetailResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseDetailResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
 
     }
 }
