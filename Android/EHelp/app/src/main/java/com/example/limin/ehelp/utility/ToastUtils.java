@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class ToastUtils {
     public static void show(final Context context,String text) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
     public static final String NETWORK_ERROR = "网络请求失败";
     public static final String SERVER_ERROR = "服务器错误";

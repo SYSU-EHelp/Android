@@ -62,7 +62,7 @@ public class APITestActivity extends AppCompatActivity {
         });
 
         // --- 注册
-        Button register = (Button) findViewById(R.id.register);
+        final Button register = (Button) findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,6 +198,39 @@ public class APITestActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<EmptyResult> call, Throwable t) {
 
+                    }
+                });
+            }
+        });
+
+        //  获取紧急联系人
+        //  退出登录
+        Button contacts = (Button) findViewById(R.id.contacts);
+        contacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ToastUtils.show(APITestActivity.this, "ccccccccccc");
+                Call<ContactsResult> call = apiService.requestContacts();
+                call.enqueue(new Callback<ContactsResult>() {
+                    @Override
+                    public void onResponse(Call<ContactsResult> call, Response<ContactsResult> response) {
+
+                        ToastUtils.show(APITestActivity.this, response.body().status + "");
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        Toast.makeText(APITestActivity.this, "aaa", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ContactsResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
                     }
                 });
             }

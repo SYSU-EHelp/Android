@@ -14,6 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -43,6 +44,9 @@ public interface ApiService {
 
     @POST("/api/users/logout")
     Call<EmptyResult> requestLogout();
+
+    @GET("/api/users/contacts")
+    Call<ContactsResult> requestContacts();
 
     static final Interceptor interceptor = new Interceptor() {
         @Override
