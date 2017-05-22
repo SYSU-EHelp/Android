@@ -78,6 +78,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:text="获取求救列表"
+                android:id="@+id/helps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
 
 
         </LinearLayout>

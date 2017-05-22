@@ -76,6 +76,9 @@ public interface ApiService {
     Call<EmptyResult> requestAnswerQuestion(@Path("question_id") int question_id,
                                             @Query("answer") String answer);
 
+    @GET("/api/helps")
+    Call<HelpsResult> requestHelps();
+
 
     static final Interceptor interceptor = new Interceptor() {
         @Override
