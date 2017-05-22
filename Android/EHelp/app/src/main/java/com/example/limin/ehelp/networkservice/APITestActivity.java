@@ -2,6 +2,7 @@ package com.example.limin.ehelp.networkservice;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,11 @@ import android.widget.Toast;
 import com.example.limin.ehelp.R;
 import com.example.limin.ehelp.utility.CurrentUser;
 import com.example.limin.ehelp.utility.ToastUtils;
+import com.google.gson.Gson;
+
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -109,14 +115,28 @@ public class APITestActivity extends AppCompatActivity {
                             return;
                         }
                         // 维护cookir 和 记录id
-                        CurrentUser.cookie = response.headers().get("Set-Cookie");
+                        String cookit = "";
+                        String headersString = response.headers().toString();
+                        String pattern = "(JSESSIONID[^;]*;)[\\s\\S]*(user[^;]*;)";
+                        Pattern r = Pattern.compile(pattern);
+                        Matcher m = r.matcher(headersString);
+                        if (m.find()) {
+                            if (m.group(1) != null) {
+                                cookit += m.group(1);
+                            }
+                            if (m.group(2) != null) {
+                                cookit += m.group(2);
+                            }
+                        }
+
+                        ToastUtils.show(APITestActivity.this, cookit);
+                        CurrentUser.cookie = cookit;
                         CurrentUser.id = response.body().data.id;
+
                         SharedPreferences.Editor editor = getSharedPreferences("login_info", MODE_PRIVATE).edit();
                         editor.putInt("id", response.body().data.id);
                         editor.putString("cookit", CurrentUser.cookie);
                         editor.commit();
-                        ToastUtils.show(APITestActivity.this, CurrentUser.cookie);
-
                         Toast.makeText(APITestActivity.this, ToastUtils.LOGIN_SUCCESS + response
                                 .body().data.id, Toast.LENGTH_SHORT).show();
                     }
@@ -204,18 +224,17 @@ public class APITestActivity extends AppCompatActivity {
         });
 
         //  获取紧急联系人
-        //  退出登录
         Button contacts = (Button) findViewById(R.id.contacts);
         contacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToastUtils.show(APITestActivity.this, "ccccccccccc");
+
+                ToastUtils.show(APITestActivity.this, CurrentUser.cookie);
+
                 Call<ContactsResult> call = apiService.requestContacts();
                 call.enqueue(new Callback<ContactsResult>() {
                     @Override
                     public void onResponse(Call<ContactsResult> call, Response<ContactsResult> response) {
-
-                        ToastUtils.show(APITestActivity.this, response.body().status + "");
 
                         if (!response.isSuccessful()) {
                             ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
@@ -225,7 +244,7 @@ public class APITestActivity extends AppCompatActivity {
                             ToastUtils.show(APITestActivity.this, response.body().errmsg);
                             return;
                         }
-                        Toast.makeText(APITestActivity.this, "aaa", Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
                     }
 
                     @Override
