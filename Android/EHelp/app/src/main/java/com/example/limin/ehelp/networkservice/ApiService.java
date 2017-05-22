@@ -48,6 +48,11 @@ public interface ApiService {
     @GET("/api/users/contacts")
     Call<ContactsResult> requestContacts();
 
+    @POST("/api/users/contacts")
+    @FormUrlEncoded
+    Call<EmptyResult> requestAddContact(@Field("username") String username,
+                                        @Field("phone") String phone);
+
     static final Interceptor interceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
