@@ -97,6 +97,9 @@ public interface ApiService {
     @POST("/api/helps/{help_id}/responses")
     Call<ResponseDetailResult> requestResponseDetail(@Path("help_id") int help_id);
 
+    @POST("/api/emergencies")
+    Call<EmptyResult> requestEmergency();
+
 
     static final Interceptor interceptor = new Interceptor() {
         @Override
