@@ -88,6 +88,12 @@ public interface ApiService {
     @PATCH("/api/helps/{help_id}/finish")
     Call<EmptyResult> requestFinishHelp(@Path("help_id") int help_id);
 
+    @POST("/api/helps")
+    @FormUrlEncoded
+    Call<EmptyResult> requestAddHelp(@Field("title") String title,
+                                  @Field("description") String description,
+                                  @Field("address") String address);
+
 
 
     static final Interceptor interceptor = new Interceptor() {
