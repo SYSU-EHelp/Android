@@ -79,6 +79,10 @@ public interface ApiService {
     @GET("/api/helps")
     Call<HelpsResult> requestHelps();
 
+    @GET("/api/helps/{help_id}")
+    Call<HelpDetailResult> requestHelpDetail(@Path("help_id") int help_id);
+
+
 
     static final Interceptor interceptor = new Interceptor() {
         @Override

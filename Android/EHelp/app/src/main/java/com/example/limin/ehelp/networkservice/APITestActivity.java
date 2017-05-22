@@ -433,5 +433,36 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
+        //  获取求助详情
+        Button helpDetail = (Button) findViewById(R.id.helpDetail);
+        helpDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<HelpDetailResult> call = apiService.requestHelpDetail(1);
+                call.enqueue(new Callback<HelpDetailResult>() {
+                    @Override
+                    public void onResponse(Call<HelpDetailResult> call, Response<HelpDetailResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<HelpDetailResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
+
+
+
     }
 }
