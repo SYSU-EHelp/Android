@@ -5,6 +5,6 @@ package com.example.limin.ehelp.utility;
  */
 
 public class CurrentUser {
-    public static int userId = -1;
+    public static int id = -1;  // 记录用户id
     public static String cookie = "";
 }
