@@ -33,7 +33,7 @@ public class EmergencyContact extends AppCompatActivity {
         lv = (ListView)findViewById(R.id.emergency);
 
         List<Map<String, Object>> contact = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < username.length; i++) {
             Map<String, Object> temp = new LinkedHashMap<>();
             temp.put("username",username[i]);
             temp.put("phone", phone[i]);

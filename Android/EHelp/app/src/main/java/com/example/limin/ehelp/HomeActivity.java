@@ -118,6 +118,8 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_logout) {
+            Intent i=new Intent(this,MainActivity.class) ;
+            startActivity(i);
             finish();
             return true;
         }
