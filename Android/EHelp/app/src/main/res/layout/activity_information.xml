@@ -25,6 +25,7 @@
             android:layout_weight="1"
             android:gravity="end"
             android:id="@+id/icon"
+            android:src="@mipmap/ic_launcher"
             android:layout_alignParentRight="true"
             />
     </RelativeLayout>

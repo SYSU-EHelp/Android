@@ -30,6 +30,14 @@
 
     </ListView>
 
+    <Button
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:id="@+id/addContact"
+        android:layout_gravity="center"
+        android:text="＋添加联系人"
+        android:textSize="16dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
