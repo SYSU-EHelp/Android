@@ -28,9 +28,20 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.example.limin.ehelp.bean.HelpIdBean;
+import com.example.limin.ehelp.networkservice.APITestActivity;
+import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.networkservice.HelpIdResult;
+import com.example.limin.ehelp.utility.ToastUtils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Yunzhao on 2017/5/10.
@@ -47,7 +58,7 @@ public class EditHelpActivity extends AppCompatActivity {
     private TextView tv_wordcount;
     private EditText et_helpcontent;
     private TextView tv_helplocation;
-    private EditText et_helpernum;
+    //private EditText et_helpernum;
 
     // 高德地图
     private AMapLocationClient locationClient = null;
@@ -55,6 +66,9 @@ public class EditHelpActivity extends AppCompatActivity {
 
     private String curLocStr = "正在获取定位...";
     private Location curLoc = null;
+
+    // 网络访问
+    private ApiService apiService;
 
     /**
      * 需要进行检测的权限数组
@@ -80,6 +94,8 @@ public class EditHelpActivity extends AppCompatActivity {
 
         setTitle();
         findView();
+
+        apiService = ApiService.retrofit.create(ApiService.class);
 
         //初始化定位
         initLocation();
@@ -125,13 +141,56 @@ public class EditHelpActivity extends AppCompatActivity {
                     Toast.makeText(EditHelpActivity.this, "求助标题不能超过20个字", Toast.LENGTH_SHORT).show();
                 } else if (et_helpcontent.getText().toString().isEmpty()) {
                     Toast.makeText(EditHelpActivity.this, "求助描述不能为空", Toast.LENGTH_SHORT).show();
-                } else if (et_helpernum.getText().toString().isEmpty()) {
-                    Toast.makeText(EditHelpActivity.this, "求助人数不能为空", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(EditHelpActivity.this, "发求助成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EditHelpActivity.this, HelpStateActivity.class);
-                    startActivity(intent);
-                    finish();
+                }
+//                else if (et_helpernum.getText().toString().isEmpty()) {
+//                    Toast.makeText(EditHelpActivity.this, "求助人数不能为空", Toast.LENGTH_SHORT).show();
+//                }
+                else {
+                    final String title = et_helptitle.getText().toString();
+                    String description = et_helpcontent.getText().toString();
+                    String address = tv_helplocation.getText().toString();
+                    double longitude = curLoc.getLongitude();
+                    double latitude = curLoc.getLatitude();
+
+                    Log.e("addhelp", title + " " + description + " " + address + " " + longitude + " " + latitude);
+
+                    // 网络访问
+                    Call<HelpIdResult> call = apiService.requestAddHelp(title, description, address, longitude, latitude);
+                    call.enqueue(new Callback<HelpIdResult>() {
+                        @Override
+                        public void onResponse(Call<HelpIdResult> call, Response<HelpIdResult> response) {
+
+                            if (!response.isSuccessful()) {
+                                ToastUtils.show(EditHelpActivity.this, ToastUtils.SERVER_ERROR);
+                                Log.e("addhelp", "1");
+                                return;
+                            }
+                            if (response.body().status != 200) {
+                                ToastUtils.show(EditHelpActivity.this, response.body().errmsg);
+                                Log.e("addhelp", "2");
+                                return;
+                            }
+
+                            //ToastUtils.show(EditHelpActivity.this, new Gson().toJson(response.body()));
+                            HelpIdBean helpIdBean = response.body().data;
+                            int help_id = helpIdBean.id;
+
+                            Toast.makeText(EditHelpActivity.this, "发求助成功", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(EditHelpActivity.this, HelpStateActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("title", title);
+                            bundle.putInt("helpid", help_id);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            finish();
+                        }
+                        @Override
+                        public void onFailure(Call<HelpIdResult> call, Throwable t) {
+                            ToastUtils.show(EditHelpActivity.this, t.toString());
+                            Log.e("addhelp", "3");
+                        }
+                    });
+
                 }
             }
         });
@@ -214,7 +273,7 @@ public class EditHelpActivity extends AppCompatActivity {
         tv_wordcount = (TextView) findViewById(R.id.tv_wordcount);
         et_helpcontent = (EditText) findViewById(R.id.et_helpcontent);
         tv_helplocation = (TextView) findViewById(R.id.tv_helplocation);
-        et_helpernum = (EditText) findViewById(R.id.et_helpernum);
+        //et_helpernum = (EditText) findViewById(R.id.et_helpernum);
     }
 
     /**

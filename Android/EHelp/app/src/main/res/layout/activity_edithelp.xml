@@ -58,46 +58,46 @@
         android:layout_height="1dp"
         android:background="@color/mLightGray" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingLeft="15dp"-->
+        <!--android:paddingRight="15dp">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="我需要"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:textSize="@dimen/mainTextSize" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:text="我需要"-->
+            <!--android:paddingBottom="15dp"-->
+            <!--android:paddingTop="15dp"-->
+            <!--android:textSize="@dimen/mainTextSize" />-->
 
-        <EditText
-            android:id="@+id/et_helpernum"
-            android:layout_width="45dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:inputType="number"
-            android:gravity="center"/>
+        <!--<EditText-->
+            <!--android:id="@+id/et_helpernum"-->
+            <!--android:layout_width="45dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginLeft="6dp"-->
+            <!--android:layout_marginRight="6dp"-->
+            <!--android:inputType="number"-->
+            <!--android:gravity="center"/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="个人的帮助"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:textSize="@dimen/mainTextSize" />
-    </LinearLayout>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:text="个人的帮助"-->
+            <!--android:paddingBottom="15dp"-->
+            <!--android:paddingTop="15dp"-->
+            <!--android:textSize="@dimen/mainTextSize" />-->
+    <!--</LinearLayout>-->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/mLightGray" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/mLightGray" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
