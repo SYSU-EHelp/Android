@@ -55,7 +55,7 @@ public class HelpFragment extends Fragment {
 
         adapter = new SimpleAdapter(getContext(), helpListData, R.layout.layout_helpeventitem,
                 new String[]{"title", "content", "avatar", "name", "address"},
-                new int[]{R.id.tv_title, R.id.tv_content, R.id.avatar, R.id.tv_name, R.id.tv_address});
+                new int[]{R.id.tv_helptitle, R.id.tv_content, R.id.avatar, R.id.tv_name, R.id.tv_address});
 
         helpeventlist.setAdapter(adapter);
 
@@ -74,6 +74,7 @@ public class HelpFragment extends Fragment {
                 bundle.putString("launcher_username", helpData.get(i).launcher_username);
                 bundle.putString("launcher_avatar", helpData.get(i).launcher_avatar);
                 bundle.putString("phone", helpData.get(i).phone);
+                bundle.putInt("finished", helpData.get(i).finished);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

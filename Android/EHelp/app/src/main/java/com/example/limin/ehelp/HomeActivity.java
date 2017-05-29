@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
                 .add("求助", HelpFragment.class)
                 .add("提问", AskFragment.class)
-                .add("状态", StateFragment.class)
+                .add("我的", StateFragment.class)
                 .create());
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);

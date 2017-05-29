@@ -1,7 +1,9 @@
 package com.example.limin.ehelp;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -67,6 +69,7 @@ public class HelpDetailActivity extends AppCompatActivity {
     private String launcher_username;
     private String launcher_avatar;
     private String phone;
+    private int finished;
 
     // 地图
     private MapView map;
@@ -79,15 +82,25 @@ public class HelpDetailActivity extends AppCompatActivity {
     // 网络访问
     private ApiService apiService;
 
+    // 本地数据
+    private int helpingEventID;
+
+    private boolean canHelp;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_helpdetail);
 
+        SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
+        helpingEventID = sp.getInt("id", -1);
+
         setTitle();
         findView();
         getData();
         setView();
+
+        canHelp = (helpingEventID == -1) & (finished == 0);
 
         apiService = ApiService.retrofit.create(ApiService.class);
 
@@ -103,6 +116,7 @@ public class HelpDetailActivity extends AppCompatActivity {
 
         addMarker();
 
+        if (canHelp)
         btn_gohelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,6 +129,7 @@ public class HelpDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Call<EmptyResult> call = apiService.requestResponsesHelp(id);
+                        //Toast.makeText(HelpDetailActivity.this, id + "", Toast.LENGTH_SHORT).show();
                         call.enqueue(new Callback<EmptyResult>() {
                             @Override
                             public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
@@ -132,6 +147,11 @@ public class HelpDetailActivity extends AppCompatActivity {
                                 btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
                                 btn_gohelp.setBackgroundColor(R.color.mGray);
                                 tv_phone.setVisibility(View.VISIBLE);
+                                // 将正在响应的事件ID存入本地
+                                SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putInt("id", id);
+                                editor.commit();
                             }
                             @Override
                             public void onFailure(Call<EmptyResult> call, Throwable t) {
@@ -165,6 +185,7 @@ public class HelpDetailActivity extends AppCompatActivity {
         launcher_username = bundle.getString("launcher_username");
         launcher_avatar = bundle.getString("launcher_avatar");
         phone = bundle.getString("phone");
+        finished = bundle.getInt("finished");
     }
 
     private void setTitle() {
@@ -189,15 +210,30 @@ public class HelpDetailActivity extends AppCompatActivity {
         tv_phone.setText(phone);
         tv_helptitle.setText(title);
         tv_content.setText(description);
-        tv_time.setText(date);
-        tv_address.setText(address);
+        tv_time.setText("发起时间：" + date);
+        tv_address.setText("帮助地点：" + address);
+
+        if (finished == 1) {
+            btn_gohelp.setClickable(false);
+            btn_gohelp.setText("求助事件已结束");
+            btn_gohelp.setBackgroundColor(R.color.mGray);
+        } else if (helpingEventID == id) {
+            btn_gohelp.setClickable(false);
+            btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
+            btn_gohelp.setBackgroundColor(R.color.mGray);
+            tv_phone.setVisibility(View.VISIBLE);
+        } else if (helpingEventID != -1) {
+            btn_gohelp.setClickable(false);
+            btn_gohelp.setText("您正响应其他求助事件，暂时无法响应该求助");
+            btn_gohelp.setBackgroundColor(R.color.mGray);
+        }
     }
 
     private void findView() {
         avatar = (RoundedImageView) findViewById(R.id.avatar);
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_phone = (TextView) findViewById(R.id.tv_phone);
-        tv_helptitle = (TextView) findViewById(R.id.et_helptitle);
+        tv_helptitle = (TextView) findViewById(R.id.tv_helptitle);
         tv_content = (TextView) findViewById(R.id.tv_content);
         tv_time = (TextView) findViewById(R.id.tv_time);
         tv_address = (TextView) findViewById(R.id.tv_address);
@@ -208,7 +244,7 @@ public class HelpDetailActivity extends AppCompatActivity {
 
     private void addMarker() {
         LatLng latLng = new LatLng(latitude, longitude);
-        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("帮助地点：").snippet("广州大学城中山大学明德园6号"));
+        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("帮助地点：").snippet(address));
         marker.showInfoWindow();
 
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
