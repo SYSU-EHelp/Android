@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.limin.ehelp.bean.ResponseDetailBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
 import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.EmptyResult;
 import com.example.limin.ehelp.networkservice.ResponseDetailResult;
 import com.example.limin.ehelp.utility.ToastUtils;
 import com.google.gson.Gson;
@@ -51,7 +52,7 @@ public class HelpStateActivity extends AppCompatActivity {
     private SimpleAdapter adapter;
 
     // 数据
-    private String helpTitle;
+    private String helpTitle = "";
     private int helpNum;
     List<Map<String, Object>> responserlist = new ArrayList<Map<String, Object>>();
 
@@ -101,8 +102,28 @@ public class HelpStateActivity extends AppCompatActivity {
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(HelpStateActivity.this, HelpDetailActivity.class);
-                        startActivity(intent);
+                        // 结束求助
+                        Call<EmptyResult> call = apiService.requestFinishHelp(help_id);
+                        call.enqueue(new Callback<EmptyResult>() {
+                            @Override
+                            public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                                if (!response.isSuccessful()) {
+                                    ToastUtils.show(HelpStateActivity.this, ToastUtils.SERVER_ERROR);
+                                    return;
+                                }
+                                if (response.body().status != 200) {
+                                    ToastUtils.show(HelpStateActivity.this, response.body().errmsg);
+                                    return;
+                                }
+                                ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
+                            }
+                            @Override
+                            public void onFailure(Call<EmptyResult> call, Throwable t) {
+                                ToastUtils.show(HelpStateActivity.this, t.toString());
+                            }
+                        });
+
                         finish();
                     }
                 });
@@ -135,7 +156,7 @@ public class HelpStateActivity extends AppCompatActivity {
     }
 
     private void findView() {
-        tv_helptitle = (TextView) findViewById(R.id.et_helptitle);
+        tv_helptitle = (TextView) findViewById(R.id.tv_helptitle);
         tv_helpernum = (TextView) findViewById(R.id.tv_helpernum);
         tv_contacthelperhint = (TextView) findViewById(R.id.tv_contacthelperhint);
         helperlist = (ListView) findViewById(R.id.helperlist);
@@ -148,19 +169,6 @@ public class HelpStateActivity extends AppCompatActivity {
 
     // 网络访问
     private void getHelperAndRefresh() {
-//        int[] avatars = {R.mipmap.avatar, R.mipmap.avatar, R.mipmap.avatar};
-//        String[] names = {"张三", "李四", "王五"};
-//        String[] phones = {"15566667777", "15566667778", "15566667779"};
-//
-//        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-//        for (int i = 0; i < avatars.length; i++) {
-//            Map<String, Object> item = new HashMap<String, Object>();
-//            item.put("avatar", avatars[i]);
-//            item.put("name", names[i]);
-//            item.put("phone", phones[i]);
-//            list.add(item);
-//        }
-
         Call<ResponseDetailResult> call = apiService.requestResponseDetail(help_id);
         call.enqueue(new Callback<ResponseDetailResult>() {
             @Override
@@ -179,7 +187,13 @@ public class HelpStateActivity extends AppCompatActivity {
                 responserlist = responseDetailBean.responser;
                 // 更新数据
                 adapter.notifyDataSetChanged();
-                tv_helpernum.setText(responserlist.size() + "");
+                helpNum = responserlist.size();
+                tv_helpernum.setText(helpNum + "");
+                if (helpNum > 0) {
+                    tv_contacthelperhint.setVisibility(View.VISIBLE);
+                } else {
+                    tv_contacthelperhint.setVisibility(View.GONE);
+                }
             }
             @Override
             public void onFailure(Call<ResponseDetailResult> call, Throwable t) {
@@ -187,5 +201,11 @@ public class HelpStateActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(task);
+        super.onPause();
     }
 }

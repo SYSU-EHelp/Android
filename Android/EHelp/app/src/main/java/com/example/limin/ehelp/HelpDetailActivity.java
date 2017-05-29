@@ -23,7 +23,16 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.example.limin.ehelp.networkservice.APITestActivity;
+import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.utility.ToastUtils;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Yunzhao on 2017/5/13.
@@ -45,7 +54,19 @@ public class HelpDetailActivity extends AppCompatActivity {
     private TextView tv_time;
     private TextView tv_address;
     private Button btn_gohelp;
-    private TextView tv_helpernum;
+    //private TextView tv_helpernum;
+
+    // 数据
+    private int id;
+    private String title;
+    private String description;
+    private String address;
+    private String date;
+    private double longitude;
+    private double latitude;
+    private String launcher_username;
+    private String launcher_avatar;
+    private String phone;
 
     // 地图
     private MapView map;
@@ -55,6 +76,9 @@ public class HelpDetailActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_CODE = 100;
     private static final int STORAGE_PERMISSION_CODE = 101;
 
+    // 网络访问
+    private ApiService apiService;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +86,10 @@ public class HelpDetailActivity extends AppCompatActivity {
 
         setTitle();
         findView();
+        getData();
+        setView();
+
+        apiService = ApiService.retrofit.create(ApiService.class);
 
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         map.onCreate(savedInstanceState);
@@ -86,10 +114,31 @@ public class HelpDetailActivity extends AppCompatActivity {
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        btn_gohelp.setClickable(false);
-                        btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
-                        btn_gohelp.setBackgroundColor(R.color.mGray);
-                        tv_phone.setVisibility(View.VISIBLE);
+                        Call<EmptyResult> call = apiService.requestResponsesHelp(id);
+                        call.enqueue(new Callback<EmptyResult>() {
+                            @Override
+                            public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                                if (!response.isSuccessful()) {
+                                    ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
+                                    return;
+                                }
+                                if (response.body().status != 200) {
+                                    ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
+                                    return;
+                                }
+                                ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                                btn_gohelp.setClickable(false);
+                                btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
+                                btn_gohelp.setBackgroundColor(R.color.mGray);
+                                tv_phone.setVisibility(View.VISIBLE);
+                            }
+                            @Override
+                            public void onFailure(Call<EmptyResult> call, Throwable t) {
+                                ToastUtils.show(HelpDetailActivity.this, t.toString());
+                            }
+                        });
+
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -102,6 +151,20 @@ public class HelpDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getData() {
+        Bundle bundle = getIntent().getExtras();
+        id = bundle.getInt("id");
+        title = bundle.getString("title");
+        description = bundle.getString("description");
+        address = bundle.getString("address");
+        date = bundle.getString("date");
+        longitude = bundle.getDouble("longitude");
+        latitude = bundle.getDouble("latitude");
+        launcher_username = bundle.getString("launcher_username");
+        launcher_avatar = bundle.getString("launcher_avatar");
+        phone = bundle.getString("phone");
     }
 
     private void setTitle() {
@@ -121,6 +184,15 @@ public class HelpDetailActivity extends AppCompatActivity {
         tv_nextope.setVisibility(View.GONE);
     }
 
+    private void setView() {
+        tv_name.setText(launcher_username);
+        tv_phone.setText(phone);
+        tv_helptitle.setText(title);
+        tv_content.setText(description);
+        tv_time.setText(date);
+        tv_address.setText(address);
+    }
+
     private void findView() {
         avatar = (RoundedImageView) findViewById(R.id.avatar);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -131,11 +203,11 @@ public class HelpDetailActivity extends AppCompatActivity {
         tv_address = (TextView) findViewById(R.id.tv_address);
         map = (MapView) findViewById(R.id.map);
         btn_gohelp = (Button) findViewById(R.id.btn_gohelp);
-        tv_helpernum = (TextView) findViewById(R.id.tv_helpernum);
+        //tv_helpernum = (TextView) findViewById(R.id.tv_helpernum);
     }
 
     private void addMarker() {
-        LatLng latLng = new LatLng(22.95, 113.36);
+        LatLng latLng = new LatLng(latitude, longitude);
         final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("帮助地点：").snippet("广州大学城中山大学明德园6号"));
         marker.showInfoWindow();
 

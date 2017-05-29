@@ -403,8 +403,7 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
-        //  获取求救列表
-
+        //  获取求助列表
         Button helps = (Button) findViewById(R.id.helps);
         helps.setOnClickListener(new View.OnClickListener() {
             @Override
