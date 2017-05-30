@@ -38,7 +38,8 @@ public class EmergencyContact extends AppCompatActivity {
         lv = (ListView)findViewById(R.id.emergency);
         add = (Button)findViewById(R.id.addContact);
 
-        final List<Map<String, Object>> contact = new ArrayList<>();
+
+        List<Map<String, Object>> contact = new ArrayList<>();
         for (int i = 0; i < username.length; i++) {
             Map<String, Object> temp = new LinkedHashMap<>();
             temp.put("username",username[i]);

@@ -403,8 +403,7 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
-        //  获取求救列表
-
+        //  获取求助列表
         Button helps = (Button) findViewById(R.id.helps);
         helps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -527,10 +526,10 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<EmptyResult> call = apiService.requestAddHelp("title2", "descript2", "address2");
-                call.enqueue(new Callback<EmptyResult>() {
+                Call<HelpIdResult> call = apiService.requestAddHelp("title2", "descript2", "address2", 22.95, 113.36);
+                call.enqueue(new Callback<HelpIdResult>() {
                     @Override
-                    public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+                    public void onResponse(Call<HelpIdResult> call, Response<HelpIdResult> response) {
 
                         if (!response.isSuccessful()) {
                             ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
@@ -543,7 +542,7 @@ public class APITestActivity extends AppCompatActivity {
                         ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
                     }
                     @Override
-                    public void onFailure(Call<EmptyResult> call, Throwable t) {
+                    public void onFailure(Call<HelpIdResult> call, Throwable t) {
                         ToastUtils.show(APITestActivity.this, t.toString());
                     }
                 });

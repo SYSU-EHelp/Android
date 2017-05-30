@@ -11,6 +11,8 @@ public class HelpBean {
     public String address;
     public int finished;
     public String date;
+    public double longitude;
+    public double latitude;
     public String launcher_username;
     public String launcher_avatar;
     public String phone;

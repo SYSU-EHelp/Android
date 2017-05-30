@@ -83,7 +83,7 @@ public interface ApiService {
     @GET("/api/helps/{help_id}")
     Call<HelpDetailResult> requestHelpDetail(@Path("help_id") int help_id);
 
-    @POST("/api/helps/{help_id}/responses")
+    @PATCH("/api/helps/{help_id}/responses")
     Call<EmptyResult> requestResponsesHelp(@Path("help_id") int help_id);
 
     @PATCH("/api/helps/{help_id}/finish")
@@ -91,11 +91,13 @@ public interface ApiService {
 
     @POST("/api/helps")
     @FormUrlEncoded
-    Call<EmptyResult> requestAddHelp(@Field("title") String title,
+    Call<HelpIdResult> requestAddHelp(@Field("title") String title,
                                   @Field("description") String description,
-                                  @Field("address") String address);
+                                  @Field("address") String address,
+                                  @Field("longitude") double longitude,
+                                  @Field("latitude") double latitude);
 
-    @POST("/api/helps/{help_id}/responses")
+    @GET("/api/helps/{help_id}/responses")
     Call<ResponseDetailResult> requestResponseDetail(@Path("help_id") int help_id);
 
     @POST("/api/emergencies")

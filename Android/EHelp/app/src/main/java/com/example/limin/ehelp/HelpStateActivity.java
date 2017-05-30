@@ -3,6 +3,7 @@ package com.example.limin.ehelp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +15,22 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.limin.ehelp.bean.ResponseDetailBean;
+import com.example.limin.ehelp.networkservice.APITestActivity;
+import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.networkservice.ResponseDetailResult;
+import com.example.limin.ehelp.utility.ToastUtils;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Yunzhao on 2017/5/13.
@@ -38,17 +51,45 @@ public class HelpStateActivity extends AppCompatActivity {
 
     private SimpleAdapter adapter;
 
+    // 数据
+    private String helpTitle = "";
+    private int helpNum;
+    List<Map<String, Object>> responserlist = new ArrayList<Map<String, Object>>();
+
+    // 网络访问
+    private int help_id;
+    private ApiService apiService;
+
+    // 5秒刷新一次响应者列表
+    private Handler handler = new Handler();
+    private Runnable task =new Runnable() {
+        public void run() {
+            handler.postDelayed(this, 5*1000);
+            getHelperAndRefresh();
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_helpstate);
 
+        // 接收上个页面传来的数据
+        Bundle bundle = this.getIntent().getExtras();
+        helpTitle = bundle.getString("title");
+        help_id = bundle.getInt("helpid");
+
+        // 初始化
         setTitle();
         findView();
+        initView();
+        handler.postDelayed(task, 5*1000);
 
-        adapter = new SimpleAdapter(this, getHelper(), R.layout.layout_helperitem,
+        apiService = ApiService.retrofit.create(ApiService.class);
+
+        // 设置响应者列表
+        adapter = new SimpleAdapter(this, responserlist, R.layout.layout_helperitem,
                 new String[]{"avatar", "name", "phone"}, new int[]{R.id.avatar, R.id.tv_helpername, R.id.tv_phone});
-
         helperlist.setAdapter(adapter);
 
         btn_finishhelpevent.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +102,28 @@ public class HelpStateActivity extends AppCompatActivity {
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(HelpStateActivity.this, HelpDetailActivity.class);
-                        startActivity(intent);
+                        // 结束求助
+                        Call<EmptyResult> call = apiService.requestFinishHelp(help_id);
+                        call.enqueue(new Callback<EmptyResult>() {
+                            @Override
+                            public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                                if (!response.isSuccessful()) {
+                                    ToastUtils.show(HelpStateActivity.this, ToastUtils.SERVER_ERROR);
+                                    return;
+                                }
+                                if (response.body().status != 200) {
+                                    ToastUtils.show(HelpStateActivity.this, response.body().errmsg);
+                                    return;
+                                }
+                                ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
+                            }
+                            @Override
+                            public void onFailure(Call<EmptyResult> call, Throwable t) {
+                                ToastUtils.show(HelpStateActivity.this, t.toString());
+                            }
+                        });
+
                         finish();
                     }
                 });
@@ -95,28 +156,56 @@ public class HelpStateActivity extends AppCompatActivity {
     }
 
     private void findView() {
-        tv_helptitle = (TextView) findViewById(R.id.et_helptitle);
+        tv_helptitle = (TextView) findViewById(R.id.tv_helptitle);
         tv_helpernum = (TextView) findViewById(R.id.tv_helpernum);
         tv_contacthelperhint = (TextView) findViewById(R.id.tv_contacthelperhint);
         helperlist = (ListView) findViewById(R.id.helperlist);
         btn_finishhelpevent = (Button) findViewById(R.id.btn_finishhelpevent);
     }
 
+    private void initView() {
+        tv_helptitle.setText(helpTitle);
+    }
+
     // 网络访问
-    private List<Map<String, Object>> getHelper() {
-        int[] avatars = {R.mipmap.avatar, R.mipmap.avatar, R.mipmap.avatar};
-        String[] names = {"张三", "李四", "王五"};
-        String[] phones = {"15566667777", "15566667778", "15566667779"};
+    private void getHelperAndRefresh() {
+        Call<ResponseDetailResult> call = apiService.requestResponseDetail(help_id);
+        call.enqueue(new Callback<ResponseDetailResult>() {
+            @Override
+            public void onResponse(Call<ResponseDetailResult> call, Response<ResponseDetailResult> response) {
 
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < avatars.length; i++) {
-            Map<String, Object> item = new HashMap<String, Object>();
-            item.put("avatar", avatars[i]);
-            item.put("name", names[i]);
-            item.put("phone", phones[i]);
-            list.add(item);
-        }
+                if (!response.isSuccessful()) {
+                    ToastUtils.show(HelpStateActivity.this, ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    ToastUtils.show(HelpStateActivity.this, response.body().errmsg);
+                    return;
+                }
+                ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
+                ResponseDetailBean responseDetailBean = response.body().data;
+                responserlist = responseDetailBean.responser;
+                // 更新数据
+                adapter.notifyDataSetChanged();
+                helpNum = responserlist.size();
+                tv_helpernum.setText(helpNum + "");
+                if (helpNum > 0) {
+                    tv_contacthelperhint.setVisibility(View.VISIBLE);
+                } else {
+                    tv_contacthelperhint.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseDetailResult> call, Throwable t) {
+                ToastUtils.show(HelpStateActivity.this, t.toString());
+            }
+        });
 
-        return list;
+    }
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(task);
+        super.onPause();
     }
 }
