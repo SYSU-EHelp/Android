@@ -7,33 +7,17 @@
 
     <include layout="@layout/layout_titlebar"/>
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/anwserquestiontitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
-
-        <EditText
-            android:id="@+id/editquestiontitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="问题标题"
-            android:maxLines="1"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:textSize="@dimen/mainTextSize" />
-
-        <TextView
-            android:id="@+id/editquestionwordcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0/20"
-            android:textSize="14sp" />
-    </LinearLayout>
+        android:background="@null"
+        android:hint="请问中大的校车要怎么买票？"
+        android:maxLines="1"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:textSize="@dimen/mainTextSize" />
 
     <View
         android:layout_width="match_parent"
@@ -43,12 +27,12 @@
         android:layout_marginRight="15dp"/>
 
     <EditText
-        android:id="@+id/editquestioncontent"
+        android:id="@+id/anwserquestioncontent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@null"
         android:gravity="start"
-        android:hint="问题描述"
+        android:hint="添加回答"
         android:padding="15dp"
         android:scrollbars="vertical"
         android:textSize="@dimen/mainTextSize" />

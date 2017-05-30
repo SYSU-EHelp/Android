@@ -3,6 +3,7 @@ package com.example.limin.ehelp;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -72,6 +73,14 @@ public class QuestionDetailActivity extends AppCompatActivity {
         setTitle();
         findView();
         getData();
+
+        btn_gohelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuestionDetailActivity.this, AnwserQuestionActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getData() {
