@@ -81,7 +81,9 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.btn_createquestion:
-                    Toast.makeText(HomeActivity.this, "发提问", Toast.LENGTH_SHORT).show();
+                    popDialog.dismiss();
+                    intent = new Intent(HomeActivity.this, EditQuestionActivity.class);
+                    startActivity(intent);
                     break;
             }
         }

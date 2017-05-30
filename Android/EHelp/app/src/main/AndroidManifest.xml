@@ -74,6 +74,8 @@
             android:launchMode="singleTask"/>
         <activity android:name=".HelpDetailActivity"
             android:launchMode="singleTask"/>
+        <activity android:name=".EditQuestionActivity"
+                  android:launchMode="singleTask"/>
         <activity
             android:name=".networkservice.APITestActivity"
             android:launchMode="singleTask"
