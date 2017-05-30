@@ -11,7 +11,7 @@
         android:id="@+id/questiontitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="请问中大的校车要怎么买票"
+        android:text=""
         android:textColor="@android:color/black"
         android:textSize="16sp"/>
 
@@ -22,7 +22,7 @@
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="我是中大南校区的学生，今天要来东校参加一个定向越野比赛"
+        android:text=""
         android:textColor="@color/mGray"
         android:textSize="14sp" />
 
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="张三" />
+            android:text="" />
 
         <View
             android:layout_width="0dp"
@@ -61,10 +61,10 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/questioncount"
+            android:id="@+id/anwsercount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2人回答"
+            android:text=""
             android:textColor="@color/mGray"
             android:textSize="12sp" />
 
@@ -80,7 +80,7 @@
             android:id="@+id/anwserquestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="去回答"
+            android:text=""
             android:textColor="#1abc9c"/>
 
     </LinearLayout>

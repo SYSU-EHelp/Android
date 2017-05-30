@@ -67,7 +67,7 @@ public class EmergencyContact extends AppCompatActivity {
                                 Map<String, Object> temp2 = new LinkedHashMap<>();
                                 temp2.put("username", add_name);
                                 temp2.put("phone", add_phone);
-                                contact.add(temp2);
+//                                contact.add(temp2);
                                 simpleAdapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(),"添加联系人成功",Toast.LENGTH_SHORT).show();
 
