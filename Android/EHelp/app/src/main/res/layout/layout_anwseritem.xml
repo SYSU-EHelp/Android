@@ -34,14 +34,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="start"
-                android:text="张三" />
+                android:text="" />
 
 
             <TextView
-                android:id="@+id/anwsercount"
+                android:id="@+id/anwsertime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3分钟前"
+                android:text=""
                 android:textColor="@color/mGray"
                 android:textSize="12sp"
                 android:layout_marginLeft="10dp"
@@ -57,7 +57,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
         android:layout_gravity="start"
-        android:text="一般都是刷校卡就行，有些校车要用现金" />
+        android:text="" />
 
     <View
         android:layout_width="match_parent"

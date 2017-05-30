@@ -1,11 +1,13 @@
 package com.example.limin.ehelp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -31,6 +33,17 @@ public class AskFragment extends Fragment {
                 new String[] {"questiontitle", "questioncontent", "questionname", "anwsercount","anwserquestion"}, new int[] {R.id.questiontitle,
                 R.id.questioncontent, R.id.questionname, R.id.anwsercount, R.id.anwserquestion});
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
+                Bundle bundle = new Bundle();
+//                bundle.putString("title", someData.get(i).title);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
         return root;
     }
 
