@@ -8,12 +8,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,8 @@ import com.example.limin.ehelp.networkservice.EmptyResult;
 import com.example.limin.ehelp.utility.ToastUtils;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +58,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private TextView questiondetailtitle;
     private TextView questiondetailcontent;
     private TextView questiondetailcount;
+    private ListView anwserslist;
     private Button btn_gohelp;
 
     // 数据
@@ -100,6 +105,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         questiondetailtitle = (TextView) findViewById(R.id.questiondetailtitle);
         questiondetailcontent = (TextView) findViewById(R.id.questiondetailcontent);
         questiondetailcount = (TextView) findViewById(R.id.questiondetailcount);
+        anwserslist = (ListView) findViewById(R.id.anwserslist);
         btn_gohelp = (Button) findViewById(R.id.btn_gohelp);
     }
 }
