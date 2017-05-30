@@ -8,7 +8,7 @@
               android:padding="15dp">
 
     <TextView
-        android:id="@+id/tv_helptitle"
+        android:id="@+id/questiontitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="请问中大的校车要怎么买票"
@@ -16,7 +16,7 @@
         android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/tv_content"
+        android:id="@+id/questioncontent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -48,7 +48,7 @@
             app:riv_oval="true" />
 
         <TextView
-            android:id="@+id/tv_name"
+            android:id="@+id/questionname"
             style="@style/normalTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/tv_address"
+            android:id="@+id/questioncount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2人回答"
@@ -74,7 +74,14 @@
             android:layout_gravity="center_vertical"
             android:background="@color/mGray"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:id="@+id/anwserquestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="去回答"
+            android:textColor="#1abc9c"/>
 
     </LinearLayout>
 </LinearLayout>
