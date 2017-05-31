@@ -1,5 +1,7 @@
 package com.example.limin.ehelp.bean;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,5 +10,5 @@ import java.util.Map;
  */
 
 public class ResponseDetailBean {
-    public List<Map<String, Object>> responser;
+    public ArrayList<HashMap<String, Object>> responser;
 }

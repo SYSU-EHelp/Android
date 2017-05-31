@@ -184,9 +184,21 @@ public class HelpStateActivity extends AppCompatActivity {
                 }
                 ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
                 ResponseDetailBean responseDetailBean = response.body().data;
-                responserlist = responseDetailBean.responser;
+                ArrayList<HashMap<String, Object>> responsers = responseDetailBean.responser;
+                responserlist.clear();
+                for (int i = 0; i < responsers.size(); i++) {
+                    Map<String, Object> item = new HashMap<String, Object>();
+                    item.put("avatar", R.mipmap.avatar);
+                    item.put("name", responsers.get(i).get("responser_username"));
+                    item.put("phone", responsers.get(i).get("phone"));
+                    responserlist.add(item);
+                }
+
+                //responserlist = responseDetailBean.responser;
+
                 // 更新数据
                 adapter.notifyDataSetChanged();
+
                 helpNum = responserlist.size();
                 tv_helpernum.setText(helpNum + "");
                 if (helpNum > 0) {

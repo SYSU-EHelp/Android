@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,12 +26,20 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.example.limin.ehelp.bean.HelpBean;
+import com.example.limin.ehelp.bean.ResponseDetailBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
 import com.example.limin.ehelp.networkservice.ApiService;
 import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.networkservice.HelpDetailResult;
+import com.example.limin.ehelp.networkservice.ResponseDetailResult;
 import com.example.limin.ehelp.utility.ToastUtils;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,6 +96,15 @@ public class HelpDetailActivity extends AppCompatActivity {
 
     private boolean canHelp;
 
+    // 10秒检测一次求助是否结束
+    private Handler handler = new Handler();
+    private Runnable task = new Runnable() {
+        public void run() {
+            handler.postDelayed(this, 10 * 1000);
+            refreshEventState();
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +119,7 @@ public class HelpDetailActivity extends AppCompatActivity {
         setView();
 
         canHelp = (helpingEventID == -1) & (finished == 0);
+        handler.postDelayed(task, 10 * 1000);
 
         apiService = ApiService.retrofit.create(ApiService.class);
 
@@ -117,60 +136,61 @@ public class HelpDetailActivity extends AppCompatActivity {
         addMarker();
 
         if (canHelp)
-        btn_gohelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            btn_gohelp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                //dialog参数设置
-                AlertDialog.Builder builder=new AlertDialog.Builder(HelpDetailActivity.this);  //先得到构造器
-                builder.setTitle("提示"); //设置标题
-                builder.setMessage("是否确认去帮TA?"); //设置内容
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Call<EmptyResult> call = apiService.requestResponsesHelp(id);
-                        //Toast.makeText(HelpDetailActivity.this, id + "", Toast.LENGTH_SHORT).show();
-                        call.enqueue(new Callback<EmptyResult>() {
-                            @Override
-                            public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+                    //dialog参数设置
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HelpDetailActivity.this);  //先得到构造器
+                    builder.setTitle("提示"); //设置标题
+                    builder.setMessage("是否确认去帮TA?"); //设置内容
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Call<EmptyResult> call = apiService.requestResponsesHelp(id);
+                            //Toast.makeText(HelpDetailActivity.this, id + "", Toast.LENGTH_SHORT).show();
+                            call.enqueue(new Callback<EmptyResult>() {
+                                @Override
+                                public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
 
-                                if (!response.isSuccessful()) {
-                                    ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
-                                    return;
+                                    if (!response.isSuccessful()) {
+                                        ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
+                                        return;
+                                    }
+                                    if (response.body().status != 200) {
+                                        ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
+                                        return;
+                                    }
+                                    ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                                    btn_gohelp.setClickable(false);
+                                    btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
+                                    btn_gohelp.setBackgroundColor(R.color.mGray);
+                                    tv_phone.setVisibility(View.VISIBLE);
+                                    // 将正在响应的事件ID存入本地
+                                    SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putInt("id", id);
+                                    editor.commit();
                                 }
-                                if (response.body().status != 200) {
-                                    ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
-                                    return;
+
+                                @Override
+                                public void onFailure(Call<EmptyResult> call, Throwable t) {
+                                    ToastUtils.show(HelpDetailActivity.this, t.toString());
                                 }
-                                ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
-                                btn_gohelp.setClickable(false);
-                                btn_gohelp.setText("您正响应该求助，建议您打电话联系求助者");
-                                btn_gohelp.setBackgroundColor(R.color.mGray);
-                                tv_phone.setVisibility(View.VISIBLE);
-                                // 将正在响应的事件ID存入本地
-                                SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt("id", id);
-                                editor.commit();
-                            }
-                            @Override
-                            public void onFailure(Call<EmptyResult> call, Throwable t) {
-                                ToastUtils.show(HelpDetailActivity.this, t.toString());
-                            }
-                        });
+                            });
 
-                    }
-                });
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                builder.create().show();
+                        }
+                    });
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    builder.create().show();
 
-            }
-        });
+                }
+            });
     }
 
     private void getData() {
@@ -242,6 +262,58 @@ public class HelpDetailActivity extends AppCompatActivity {
         //tv_helpernum = (TextView) findViewById(R.id.tv_helpernum);
     }
 
+    // 网络访问
+    private void refreshEventState() {
+        //  获取求助详情
+        Call<HelpDetailResult> call = apiService.requestHelpDetail(id);
+        call.enqueue(new Callback<HelpDetailResult>() {
+            @Override
+            public void onResponse(Call<HelpDetailResult> call, Response<HelpDetailResult> response) {
+
+                if (!response.isSuccessful()) {
+                    ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
+                    return;
+                }
+
+                ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                HelpBean helpData = response.body().data;
+                // 如果求助已结束，则更新UI
+                if (helpData.finished == 1) {
+                    btn_gohelp.setClickable(false);
+                    btn_gohelp.setText("求助事件已结束");
+                    btn_gohelp.setBackgroundColor(R.color.mGray);
+                    // 清除本地存储的事件ID
+                    SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.remove("id");
+                    editor.commit();
+
+                    // 弹出dialog提示
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HelpDetailActivity.this);  //先得到构造器
+                    builder.setTitle("求助事件已结束"); //设置标题
+                    builder.setMessage("求助者已结束事件，非常感谢您的热心帮助"); //设置内容
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HelpDetailResult> call, Throwable t) {
+                ToastUtils.show(HelpDetailActivity.this, t.toString());
+            }
+        });
+
+    }
+
     private void addMarker() {
         LatLng latLng = new LatLng(latitude, longitude);
         final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("帮助地点：").snippet(address));
@@ -257,18 +329,22 @@ public class HelpDetailActivity extends AppCompatActivity {
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
         map.onDestroy();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         //在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图
         map.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
         map.onPause();
+        handler.removeCallbacks(task);
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
