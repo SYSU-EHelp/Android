@@ -27,11 +27,13 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.example.limin.ehelp.bean.HelpBean;
+import com.example.limin.ehelp.bean.HelpStatusBean;
 import com.example.limin.ehelp.bean.ResponseDetailBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
 import com.example.limin.ehelp.networkservice.ApiService;
 import com.example.limin.ehelp.networkservice.EmptyResult;
 import com.example.limin.ehelp.networkservice.HelpDetailResult;
+import com.example.limin.ehelp.networkservice.HelpStatusResult;
 import com.example.limin.ehelp.networkservice.ResponseDetailResult;
 import com.example.limin.ehelp.utility.ToastUtils;
 import com.google.gson.Gson;
@@ -95,6 +97,7 @@ public class HelpDetailActivity extends AppCompatActivity {
     private int helpingEventID;
 
     private boolean canHelp;
+    private boolean isFinished = false;
 
     // 10秒检测一次求助是否结束
     private Handler handler = new Handler();
@@ -225,6 +228,7 @@ public class HelpDetailActivity extends AppCompatActivity {
         tv_nextope.setVisibility(View.GONE);
     }
 
+    // 进入页面时执行一次
     private void setView() {
         tv_name.setText(launcher_username);
         tv_phone.setText(phone);
@@ -264,11 +268,11 @@ public class HelpDetailActivity extends AppCompatActivity {
 
     // 网络访问
     private void refreshEventState() {
-        //  获取求助详情
-        Call<HelpDetailResult> call = apiService.requestHelpDetail(id);
-        call.enqueue(new Callback<HelpDetailResult>() {
+        //  获取求助的finish状态
+        Call<HelpStatusResult> call = apiService.requestHelpStatus(id);
+        call.enqueue(new Callback<HelpStatusResult>() {
             @Override
-            public void onResponse(Call<HelpDetailResult> call, Response<HelpDetailResult> response) {
+            public void onResponse(Call<HelpStatusResult> call, Response<HelpStatusResult> response) {
 
                 if (!response.isSuccessful()) {
                     ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
@@ -278,11 +282,10 @@ public class HelpDetailActivity extends AppCompatActivity {
                     ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
                     return;
                 }
-
                 ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
-                HelpBean helpData = response.body().data;
+                HelpStatusBean helpStatus = response.body().data;
                 // 如果求助已结束，则更新UI
-                if (helpData.finished == 1) {
+                if (helpStatus.finished == 1 && !isFinished) {
                     btn_gohelp.setClickable(false);
                     btn_gohelp.setText("求助事件已结束");
                     btn_gohelp.setBackgroundColor(R.color.mGray);
@@ -292,26 +295,28 @@ public class HelpDetailActivity extends AppCompatActivity {
                     editor.remove("id");
                     editor.commit();
 
-                    // 弹出dialog提示
+                    // 如果用户正在响应该事件，则弹出dialog提示
                     AlertDialog.Builder builder = new AlertDialog.Builder(HelpDetailActivity.this);  //先得到构造器
                     builder.setTitle("求助事件已结束"); //设置标题
-                    builder.setMessage("求助者已结束事件，非常感谢您的热心帮助"); //设置内容
+                    builder.setMessage("求助者已结束事件，非常感谢您的热心"); //设置内容
                     builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
+
                     builder.create().show();
+                    // 更新isFinished，保证只弹出一次弹框
+                    isFinished = true;
                 }
             }
 
             @Override
-            public void onFailure(Call<HelpDetailResult> call, Throwable t) {
+            public void onFailure(Call<HelpStatusResult> call, Throwable t) {
                 ToastUtils.show(HelpDetailActivity.this, t.toString());
             }
         });
-
     }
 
     private void addMarker() {
