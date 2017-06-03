@@ -461,8 +461,36 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
-        //  请求响应
+        //  获取求助状态
+        Button helpStatus = (Button) findViewById(R.id.helpStatus);
+        helpStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                Call<HelpStatusResult> call = apiService.requestHelpStatus(1);
+                call.enqueue(new Callback<HelpStatusResult>() {
+                    @Override
+                    public void onResponse(Call<HelpStatusResult> call, Response<HelpStatusResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<HelpStatusResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
+
+        //  请求响应
         Button responses = (Button) findViewById(R.id.responses);
         responses.setOnClickListener(new View.OnClickListener() {
             @Override

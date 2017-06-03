@@ -80,6 +80,9 @@ public interface ApiService {
     @GET("/api/helps")
     Call<HelpsResult> requestHelps();
 
+    @GET("/api/helps/{help_id}/status")
+    Call<HelpStatusResult> requestHelpStatus(@Path("help_id") int help_id);
+
     @GET("/api/helps/{help_id}")
     Call<HelpDetailResult> requestHelpDetail(@Path("help_id") int help_id);
 

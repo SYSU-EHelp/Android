@@ -91,6 +91,12 @@
                 android:layout_height="wrap_content" />
 
             <Button
+                android:text="获取求助状态"
+                android:id="@+id/helpStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
                 android:text="请求响应求助"
                 android:id="@+id/responses"
                 android:layout_width="match_parent"
