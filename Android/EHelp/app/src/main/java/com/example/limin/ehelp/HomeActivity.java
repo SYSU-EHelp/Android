@@ -2,6 +2,7 @@ package com.example.limin.ehelp;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -12,9 +13,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.limin.ehelp.networkservice.APITestActivity;
+import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.utility.CurrentUser;
+import com.example.limin.ehelp.utility.ToastUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by limin on 2017/4/30.
@@ -25,11 +35,15 @@ public class HomeActivity extends AppCompatActivity {
     private FloatingActionButton createBtn;
     private PopUpDialog popDialog;
 
+    private ApiService apiService;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Bundle bundle = this.getIntent().getExtras();
+        apiService = ApiService.retrofit.create(ApiService.class);
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
@@ -120,9 +134,35 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_logout) {
-            Intent i=new Intent(this,MainActivity.class) ;
-            startActivity(i);
-            finish();
+            Call<EmptyResult> call = apiService.requestLogout();
+            call.enqueue(new Callback<EmptyResult>() {
+                @Override
+                public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+                    if (!response.isSuccessful()) {
+                        ToastUtils.show(HomeActivity.this, ToastUtils.SERVER_ERROR);
+                        return;
+                    }
+                    if (response.body().status != 200) {
+                        ToastUtils.show(HomeActivity.this, response.body().errmsg);
+                        return;
+                    }
+
+                    SharedPreferences.Editor editor = getSharedPreferences("login_info", MODE_PRIVATE).edit();
+                    editor.putInt("id", -1);
+                    editor.putString("cookit", "");
+                    editor.commit();
+                    CurrentUser.id = -1;
+                    CurrentUser.cookie = "";
+
+                    Toast.makeText(HomeActivity.this, "已经退出登录", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call<EmptyResult> call, Throwable t) {
+                    Toast.makeText(HomeActivity.this, "退出失败？？", Toast.LENGTH_SHORT).show();
+                }
+            });
             return true;
         }
 
