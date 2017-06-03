@@ -40,7 +40,7 @@ public class EmergencyContact extends AppCompatActivity {
 
 
 
-        List<Map<String, Object>> contact = new ArrayList<>();
+        final List<Map<String, Object>> contact = new ArrayList<>();
         for (int i = 0; i < username.length; i++) {
             Map<String, Object> temp = new LinkedHashMap<>();
             temp.put("username",username[i]);
@@ -68,11 +68,7 @@ public class EmergencyContact extends AppCompatActivity {
                                 Map<String, Object> temp2 = new LinkedHashMap<>();
                                 temp2.put("username", add_name);
                                 temp2.put("phone", add_phone);
-<<<<<<< HEAD
                                 contact.add(temp2);
-=======
-//                                contact.add(temp2);
->>>>>>> master
                                 simpleAdapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(),"添加联系人成功",Toast.LENGTH_SHORT).show();
 
