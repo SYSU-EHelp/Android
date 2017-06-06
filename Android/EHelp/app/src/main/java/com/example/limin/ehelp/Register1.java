@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.limin.ehelp.bean.SendCodeBean;
 import com.example.limin.ehelp.networkservice.ApiServiceRequestResultHandler;
 import com.example.limin.ehelp.networkservice.SimpleRequest;
 import com.example.limin.ehelp.utility.ToastUtils;
@@ -40,6 +41,8 @@ public class Register1 extends AppCompatActivity {
                 SimpleRequest.getInstance().sendCode(phone.getText().toString().trim(), new ApiServiceRequestResultHandler() {
                     @Override
                     public void onSuccess(Object dataBean) {
+                        SendCodeBean code = (SendCodeBean) dataBean;
+                        ToastUtils.show(Register1.this, code.code);
                     }
                     @Override
                     public void onError(Object errorMessage) {
@@ -58,6 +61,8 @@ public class Register1 extends AppCompatActivity {
                     Toast.makeText(Register1.this, "请先输入您的手机验证码", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(Register1.this,Register2.class);
+                    intent.putExtra("code", verified.getText().toString().trim());
+                    intent.putExtra("phone",phone.getText().toString().trim());
                     startActivity(intent);
                 }
             }
