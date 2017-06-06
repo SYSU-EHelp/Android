@@ -10,7 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.limin.ehelp.bean.LoginBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
+import com.example.limin.ehelp.networkservice.ApiServiceRequestResultHandler;
+import com.example.limin.ehelp.networkservice.SimpleRequest;
+import com.example.limin.ehelp.utility.ToastUtils;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,13 +37,26 @@ public class MainActivity extends AppCompatActivity {
                 } else if (TextUtils.isEmpty(password.getText().toString())) {
                     Toast.makeText(MainActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(MainActivity.this,HomeActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name", username.getText().toString());
-                    bundle.putString("password", password.getText().toString());
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();
+
+                    SimpleRequest.getInstance().login(
+                        MainActivity.this,
+                        username.getText().toString().trim(),
+                        password.getText().toString().trim(),
+                        new ApiServiceRequestResultHandler() {
+                            @Override
+                            public void onSuccess(Object dataBean) {
+                                // example
+    //                          ToastUtils.show(MainActivity.this, new Gson().toJson((LoginBean)dataBean));
+                                Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(Object errorMessage) {
+                                ToastUtils.show(MainActivity.this,(String) errorMessage);
+                            }
+                        });
                 }
             }
         });
