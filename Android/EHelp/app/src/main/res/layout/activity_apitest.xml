@@ -127,8 +127,13 @@
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="获取我的信息"
+                android:text="获取我的事件信息"
                 android:id="@+id/user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Button
+                android:text="获取我的基本信息"
+                android:id="@+id/userInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

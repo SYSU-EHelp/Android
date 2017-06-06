@@ -2,6 +2,7 @@ package com.example.limin.ehelp.networkservice;
 
 import com.example.limin.ehelp.bean.QuestionDetailBean;
 import com.example.limin.ehelp.bean.UserBean;
+import com.example.limin.ehelp.bean.UserInfoBean;
 import com.example.limin.ehelp.utility.CurrentUser;
 import com.example.limin.ehelp.utility.Global;
 
@@ -108,6 +109,9 @@ public interface ApiService {
 
     @GET("/api/users/{user_id}")
     Call<UserResult> requestUser(@Path("user_id") int user_id);
+
+    @GET("/api/users/{user_id}/information")
+    Call<UserInfoResult> requestUserInfo(@Path("user_id") int user_id);
 
 
     static final Interceptor interceptor = new Interceptor() {

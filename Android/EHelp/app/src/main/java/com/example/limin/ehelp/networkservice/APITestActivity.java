@@ -635,13 +635,13 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
-        //  获取用户消息
+        //  获取用户事件消息
         Button user = (Button) findViewById(R.id.user);
         user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Call<UserResult> call = apiService.requestUser(3);
+                Call<UserResult> call = apiService.requestUser(CurrentUser.id);
                 call.enqueue(new Callback<UserResult>() {
                     @Override
                     public void onResponse(Call<UserResult> call, Response<UserResult> response) {
@@ -658,6 +658,36 @@ public class APITestActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(Call<UserResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
+
+
+        //  获取用户基本消息
+        Button userInfo = (Button) findViewById(R.id.userInfo);
+        userInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<UserInfoResult> call = apiService.requestUserInfo(CurrentUser.id);
+                call.enqueue(new Callback<UserInfoResult>() {
+                    @Override
+                    public void onResponse(Call<UserInfoResult> call, Response<UserInfoResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<UserInfoResult> call, Throwable t) {
                         ToastUtils.show(APITestActivity.this, t.toString());
                     }
                 });
