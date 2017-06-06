@@ -35,6 +35,8 @@ public class SimpleRequest {
 
     // example login
     // we recommend the ApiServiceRequestResultHandler only handle Ui case
+
+    // 登录
     public void login(final Context context, String username, String password, final ApiServiceRequestResultHandler apiServiceRequestResultHandler) {
         Call<LoginResult> call = apiService.requestLogin(username, password);
         call.enqueue(new Callback<LoginResult>() {
@@ -79,4 +81,30 @@ public class SimpleRequest {
             }
         });
     }
+
+    // 发送验证码
+    public void sendCode(String phone, final  ApiServiceRequestResultHandler apiServiceRequestResultHandler) {
+        Call<SendCodeResult> call = apiService.requestSendCode(phone);
+        call.enqueue(new Callback<SendCodeResult>() {
+            @Override
+            public void onResponse(Call<SendCodeResult> call, Response<SendCodeResult> response) {
+                if (!response.isSuccessful()) {
+                    apiServiceRequestResultHandler.onError(ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    apiServiceRequestResultHandler.onError(response.body().errmsg);
+                    return;
+                }
+                apiServiceRequestResultHandler.onSuccess(response.body().data);
+            }
+
+            @Override
+            public void onFailure(Call<SendCodeResult> call, Throwable t) {
+                apiServiceRequestResultHandler.onError(ToastUtils.NETWORK_ERROR);
+            }
+        });
+    }
+
+
 }
