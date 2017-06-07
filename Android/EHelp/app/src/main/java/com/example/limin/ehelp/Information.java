@@ -2,6 +2,7 @@ package com.example.limin.ehelp;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -46,6 +47,7 @@ public class Information extends AppCompatActivity {
                 startActivityForResult(intent,1);
             }
         });
+
         //二次载入需要加载个人信息
         /*
         username.setText();

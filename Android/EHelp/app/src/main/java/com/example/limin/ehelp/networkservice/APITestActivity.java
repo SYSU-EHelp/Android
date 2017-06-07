@@ -114,7 +114,7 @@ public class APITestActivity extends AppCompatActivity {
                             ToastUtils.show(APITestActivity.this, response.body().errmsg);
                             return;
                         }
-                        // 维护cookir 和 记录id
+                        // 维护cookie 和 记录id
                         String cookit = "";
                         String headersString = response.headers().toString();
                         String pattern = "(JSESSIONID[^;]*;)[\\s\\S]*(user[^;]*;)";
