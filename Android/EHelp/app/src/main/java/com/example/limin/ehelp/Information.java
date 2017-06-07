@@ -2,6 +2,7 @@ package com.example.limin.ehelp;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,7 +17,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.limin.ehelp.bean.UserInfoBean;
+import com.example.limin.ehelp.networkservice.APITestActivity;
+import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.UserInfoResult;
+import com.example.limin.ehelp.utility.CurrentUser;
+import com.example.limin.ehelp.utility.ToastUtils;
+import com.google.gson.Gson;
+
 import java.io.FileNotFoundException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Tompkins on 2017/5/9.
@@ -29,13 +42,17 @@ public class Information extends AppCompatActivity {
     private EditText username;
     private EditText phone;
     private ImageView icon;
+    private ApiService apiService;
+    private UserInfoBean userInfoBean;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
+        apiService = ApiService.retrofit.create(ApiService.class);
         setTitle();
-
+        getData();
         icon = (ImageView)findViewById(R.id.icon);
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,14 +63,35 @@ public class Information extends AppCompatActivity {
                 startActivityForResult(intent,1);
             }
         });
-        //二次载入需要加载个人信息
-        /*
-        username.setText();
-        phone.setText();
-        */
+
 
     }
 
+    private void getData() {
+        Call<UserInfoResult> call = apiService.requestUserInfo(CurrentUser.id);
+        call.enqueue(new Callback<UserInfoResult>() {
+            @Override
+            public void onResponse(Call<UserInfoResult> call, Response<UserInfoResult> response) {
+
+                if (!response.isSuccessful()) {
+                    ToastUtils.show(Information.this, ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    ToastUtils.show(Information.this, response.body().errmsg);
+                    return;
+                }
+                ToastUtils.show(Information.this, new Gson().toJson(response.body()));
+                userInfoBean = response.body().data;
+                username.setText(userInfoBean.username);
+                phone.setText(userInfoBean.phone);
+            }
+            @Override
+            public void onFailure(Call<UserInfoResult> call, Throwable t) {
+                ToastUtils.show(Information.this, t.toString());
+            }
+        });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -93,7 +131,7 @@ public class Information extends AppCompatActivity {
                 String un = username.getText().toString();
                 String ph = phone.getText().toString();
                 //这里需要将个人信息数据传入数据库
-                Toast.makeText(Information.this, "修改个人信息成功!", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(Information.this, "修改个人信息成功!", Toast.LENGTH_SHORT).show();*/
                 finish();
             }
         });
