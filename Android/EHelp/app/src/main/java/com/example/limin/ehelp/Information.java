@@ -26,6 +26,7 @@ import com.example.limin.ehelp.utility.ToastUtils;
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,11 +40,13 @@ public class Information extends AppCompatActivity {
     private Button btn_back;
     private TextView title;
     private TextView next;
-    private EditText username;
-    private EditText phone;
+    private TextView username;
+    private TextView phone;
     private ImageView icon;
     private ApiService apiService;
     private UserInfoBean userInfoBean;
+    private TextView name;
+    private TextView gender;
 
 
     @Override
@@ -64,6 +67,7 @@ public class Information extends AppCompatActivity {
             }
         });
 
+        RandomNG();
 
     }
 
@@ -92,6 +96,25 @@ public class Information extends AppCompatActivity {
             }
         });
     }
+
+    private void RandomNG() {
+        name = (TextView)findViewById(R.id.name);
+        gender = (TextView)findViewById(R.id.gender);
+        float a = (float)(Math.random()*100);
+        if (a > 0 && a < 25) {
+            name.setText("胡南");
+            gender.setText("男");
+        } else if (a>25 && a < 50) {
+            name.setText("李敏慧");
+            gender.setText("女");
+        } else if (a>50 && a<75) {
+            name.setText("林国丹");
+            gender.setText("男");
+        } else if (a>75 && a < 100) {
+            name.setText("李为");
+            gender.setText("男");
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -112,8 +135,8 @@ public class Information extends AppCompatActivity {
         btn_back = (Button) findViewById(R.id.btn_back);
         title = (TextView) findViewById(R.id.tv_title);
         next = (TextView) findViewById(R.id.tv_nextope);
-        username = (EditText)findViewById(R.id.username);
-        phone = (EditText)findViewById(R.id.phone);
+        username = (TextView) findViewById(R.id.username);
+        phone = (TextView) findViewById(R.id.phone);
         next = (TextView) findViewById(R.id.tv_nextope);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
