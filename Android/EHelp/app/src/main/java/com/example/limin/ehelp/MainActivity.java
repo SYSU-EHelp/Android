@@ -1,8 +1,8 @@
 package com.example.limin.ehelp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -10,28 +10,38 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.limin.ehelp.bean.LoginBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
+import com.example.limin.ehelp.networkservice.ApiService;
 import com.example.limin.ehelp.networkservice.ApiServiceRequestResultHandler;
+import com.example.limin.ehelp.networkservice.LoginResult;
 import com.example.limin.ehelp.networkservice.SimpleRequest;
+import com.example.limin.ehelp.utility.CurrentUser;
 import com.example.limin.ehelp.utility.ToastUtils;
-import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final ApiService apiService = ApiService.retrofit.create(ApiService.class);
+
         Button loginButton = (Button)findViewById(R.id.loginButton);
         final EditText username = (EditText)findViewById(R.id.username);
         final EditText password = (EditText)findViewById(R.id.password);
         final TextView register = (TextView)findViewById(R.id.register);
 
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (TextUtils.isEmpty(username.getText().toString())) {
                     Toast.makeText(MainActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(password.getText().toString())) {
@@ -57,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                                 ToastUtils.show(MainActivity.this,(String) errorMessage);
                             }
                         });
+
+
                 }
             }
         });
@@ -66,6 +78,39 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,Register1.class);
                 startActivity(intent);
+            }
+        });
+
+        //  先进行cookit 注入
+        String cookit = getSharedPreferences("login_info", MODE_PRIVATE).getString("cookit", "");
+        if (cookit == "") {
+            ToastUtils.show(MainActivity.this, "你还未来曾经登录");
+            return;
+        }
+        CurrentUser.cookie = cookit;
+
+        Call<LoginResult> call = apiService.requestAutoLogin();
+        call.enqueue(new Callback<LoginResult>() {
+            @Override
+            public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+                if (!response.isSuccessful()) {
+                    ToastUtils.show(MainActivity.this, ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    ToastUtils.show(MainActivity.this, response.body().errmsg);
+                    return;
+                }
+                Toast.makeText(MainActivity.this, ToastUtils.LOGIN_SUCCESS + response
+                        .body().data.id, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<LoginResult> call, Throwable t) {
+
             }
         });
 

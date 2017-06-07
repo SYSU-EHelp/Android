@@ -81,7 +81,7 @@ public class EmergencyHelp extends AppCompatActivity{
                     ToastUtils.show(EmergencyHelp.this, t.toString());
                 }
             });
-            exit.setText("您的紧急联系人正在赶来的路上");
+            exit.setText("已经发送紧急求救信息");
             exit.setBackgroundColor(getResources().getColor(R.color.mGray));
             exit.setClickable(false);
             hint_code.setText("我们已经向您的紧急联系人发送预先编辑好的求救信息！");
