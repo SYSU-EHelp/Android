@@ -321,7 +321,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<QuestionDetailResult> call = apiService.requestQuestionDetail(1);
+                Call<QuestionDetailResult> call = apiService.requestQuestionDetail(8);
                 call.enqueue(new Callback<QuestionDetailResult>() {
                     @Override
                     public void onResponse(Call<QuestionDetailResult> call, Response<QuestionDetailResult> response) {
@@ -380,7 +380,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<EmptyResult> call = apiService.requestAnswerQuestion(2,"answer question content");
+                Call<EmptyResult> call = apiService.requestAnswerQuestion(8,"answer question content");
                 call.enqueue(new Callback<EmptyResult>() {
                     @Override
                     public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
@@ -438,7 +438,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<HelpDetailResult> call = apiService.requestHelpDetail(1);
+                Call<HelpDetailResult> call = apiService.requestHelpDetail(58);
                 call.enqueue(new Callback<HelpDetailResult>() {
                     @Override
                     public void onResponse(Call<HelpDetailResult> call, Response<HelpDetailResult> response) {
@@ -467,7 +467,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<HelpStatusResult> call = apiService.requestHelpStatus(1);
+                Call<HelpStatusResult> call = apiService.requestHelpStatus(58);
                 call.enqueue(new Callback<HelpStatusResult>() {
                     @Override
                     public void onResponse(Call<HelpStatusResult> call, Response<HelpStatusResult> response) {
@@ -496,7 +496,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<EmptyResult> call = apiService.requestResponsesHelp(1);
+                Call<EmptyResult> call = apiService.requestResponsesHelp(59);
                 call.enqueue(new Callback<EmptyResult>() {
                     @Override
                     public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
@@ -525,7 +525,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<EmptyResult> call = apiService.requestFinishHelp(1);
+                Call<EmptyResult> call = apiService.requestFinishHelp(63);
                 call.enqueue(new Callback<EmptyResult>() {
                     @Override
                     public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
@@ -583,7 +583,7 @@ public class APITestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<ResponseDetailResult> call = apiService.requestResponseDetail(1);
+                Call<ResponseDetailResult> call = apiService.requestResponseDetail(56);
                 call.enqueue(new Callback<ResponseDetailResult>() {
                     @Override
                     public void onResponse(Call<ResponseDetailResult> call, Response<ResponseDetailResult> response) {
@@ -635,13 +635,13 @@ public class APITestActivity extends AppCompatActivity {
             }
         });
 
-        //  获取用户消息
+        //  获取用户事件消息
         Button user = (Button) findViewById(R.id.user);
         user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Call<UserResult> call = apiService.requestUser(3);
+                Call<UserResult> call = apiService.requestUser(CurrentUser.id);
                 call.enqueue(new Callback<UserResult>() {
                     @Override
                     public void onResponse(Call<UserResult> call, Response<UserResult> response) {
@@ -658,6 +658,36 @@ public class APITestActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(Call<UserResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
+
+
+        //  获取用户基本消息
+        Button userInfo = (Button) findViewById(R.id.userInfo);
+        userInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<UserInfoResult> call = apiService.requestUserInfo(CurrentUser.id);
+                call.enqueue(new Callback<UserInfoResult>() {
+                    @Override
+                    public void onResponse(Call<UserInfoResult> call, Response<UserInfoResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<UserInfoResult> call, Throwable t) {
                         ToastUtils.show(APITestActivity.this, t.toString());
                     }
                 });

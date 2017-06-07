@@ -9,7 +9,7 @@ import java.util.List;
 public class UserBean {
 
     List<Launch> launch;
-    List<Response> responses;
+    List<Response> response;
 
     public class Launch {
         public int type;
