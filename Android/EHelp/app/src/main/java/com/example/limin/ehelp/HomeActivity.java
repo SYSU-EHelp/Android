@@ -155,6 +155,7 @@ public class HomeActivity extends AppCompatActivity {
                     CurrentUser.cookie = "";
 
                     /*Toast.makeText(HomeActivity.this, "已经退出登录", Toast.LENGTH_SHORT).show();*/
+
                     Intent i=new Intent(getBaseContext(),MainActivity.class) ;
                     startActivity(i);
                 }

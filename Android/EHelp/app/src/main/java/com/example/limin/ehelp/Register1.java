@@ -2,6 +2,7 @@ package com.example.limin.ehelp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.example.limin.ehelp.utility.ToastUtils;
  * Created by limin on 2017/4/30.
  */
 public class Register1 extends AppCompatActivity {
+    private TextView send_verified;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,7 @@ public class Register1 extends AppCompatActivity {
         TextView next = (TextView) findViewById(R.id.next);
         final EditText phone = (EditText)findViewById(R.id.phone);
         final EditText verified = (EditText)findViewById(R.id.verified);
-        final TextView send_verified = (TextView) findViewById(R.id.send_verified);
+        send_verified = (TextView) findViewById(R.id.send_verified);
 
         send_verified.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +51,7 @@ public class Register1 extends AppCompatActivity {
                         ToastUtils.show(Register1.this, (String)errorMessage);
                     }
                 });
+                timer.start();
             }
         });
 
@@ -67,6 +70,44 @@ public class Register1 extends AppCompatActivity {
                 }
             }
         });
+
+
     }
+    private CountDownTimer timer = new CountDownTimer(60000, 1000) {
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            send_verified.setText((millisUntilFinished / 1000) + "秒");
+            send_verified.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        @Override
+        public void onFinish() {
+            send_verified.setEnabled(true);
+            send_verified.setText("获取验证码");
+            send_verified.setTextColor(getResources().getColor(R.color.verified));
+
+            /*Call<EmptyResult> call = apiService.requestEmergency();
+            call.enqueue(new Callback<EmptyResult>() {
+                @Override
+                public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                    if (!response.isSuccessful()) {
+                        ToastUtils.show(EmergencyHelp.this, ToastUtils.SERVER_ERROR);
+                        return;
+                    }
+                    if (response.body().status != 200) {
+                        ToastUtils.show(EmergencyHelp.this, response.body().errmsg);
+                        return;
+                    }
+                    ToastUtils.show(EmergencyHelp.this, new Gson().toJson(response.body()));
+                }
+                @Override
+                public void onFailure(Call<EmptyResult> call, Throwable t) {
+                    ToastUtils.show(EmergencyHelp.this, t.toString());
+                }
+            });*/
+        }
+    };
 }
 
