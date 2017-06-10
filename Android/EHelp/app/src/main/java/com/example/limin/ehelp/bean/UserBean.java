@@ -8,8 +8,8 @@ import java.util.List;
 
 public class UserBean {
 
-    List<Launch> launch;
-    List<Response> response;
+    public List<Launch> launch;
+    public List<Response> response;
 
     public class Launch {
         public int type;
