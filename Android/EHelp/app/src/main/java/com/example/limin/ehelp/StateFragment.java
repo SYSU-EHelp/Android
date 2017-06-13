@@ -72,6 +72,10 @@ public class StateFragment extends Fragment {
                 }
                 ToastUtils.show(getContext(), new Gson().toJson(response.body()));
                 userdata = response.body().data;
+
+                //清空列表
+                userListData.clear();
+
                 //遍历发起列表
                 for(int i = 0; i < userdata.launch.size();i++) {
                     Map<String, Object> item = new HashMap<String, Object>();
