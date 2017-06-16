@@ -1,13 +1,16 @@
 package com.example.limin.ehelp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.example.limin.ehelp.bean.HelpBean;
 import com.example.limin.ehelp.bean.UserBean;
@@ -53,6 +56,78 @@ public class StateFragment extends Fragment {
                 new String[] {"statename", "statetype", "statetime", "stateanswer"}, new int[] {R.id.state_name,
                 R.id.state_type, R.id.state_time, R.id.state_answer});
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 0 && position < userdata.launch.size()) {
+                    if (userdata.launch.get(position).type == 0) {
+
+                        //我发起的提问
+
+                    } else if (userdata.launch.get(position).type == 1 && userdata.launch.get(position).finished == 0) {
+                        Intent intent = new Intent(getContext(), HelpStateActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("helpid", userdata.launch.get(position).id);
+                        bundle.putString("title", userdata.launch.get(position).title);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else if (userdata.launch.get(position).type == 1 && userdata.launch.get(position).finished == 1) {
+                        Intent intent = new Intent(getContext(), HelpDetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", userdata.launch.get(position).id);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else if (userdata.launch.get(position).type == 2) {
+                        Toast.makeText(getContext(), "您的求救正在进行中", Toast.LENGTH_SHORT);
+                    }
+
+                } else {
+                    int l = position-userdata.launch.size();
+                    if (userdata.response.get(l).type == 0) {
+
+                        //我响应的提问
+
+                    } else if (userdata.response.get(l).type == 1) {
+                        Intent intent = new Intent(getContext(), HelpDetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", userdata.response.get(l).id);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                }
+
+
+
+
+
+                /*if (userListData.get(position).get("statetype") == "我发起的，求助") {
+                    Intent intent = new Intent(getContext(), HelpStateActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", userdata.launch.get(position).id);
+                    bundle.putString("title", userdata.launch.get(position).title);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else if (userListData.get(position).get("statetype") == "我响应的，求助"){
+                    Intent intent = new Intent(getContext(), HelpStateActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", userdata.launch.get(position).id);
+                    bundle.putString("title", userdata.launch.get(position).title);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else if (userListData.get(position).get("statetype") == "我发起的，提问") {
+
+                } else if (userListData.get(position).get("statetype") == "我响应的，提问") {
+
+                } else if (userListData.get(position).get("statetype") == "我发起的，提问") {
+
+                } else if (userListData.get(position).get("statetype") == "我发起的，求救") {
+
+                } else if (userListData.get(position).get("statetype") == "我响应的，求救") {*/
+
+            }
+        });
+
         return root;
     }
 
@@ -102,19 +177,19 @@ public class StateFragment extends Fragment {
                 //遍历响应列表
                 for(int i = 0; i < userdata.response.size();i++) {
                     Map<String, Object> item = new HashMap<String, Object>();
-                    if (userdata.launch.get(i).type == 0) {
+                    if (userdata.response.get(i).type == 0) {
                         item.put("statetype", "我响应的，提问");
                         item.put("statename", userdata.response.get(i).title);
                         item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
                         item.put("stateanswer", userdata.response.get(i).num+"人响应");
                         userListData.add(item);
-                    } else if (userdata.launch.get(i).type == 1) {
+                    } else if (userdata.response.get(i).type == 1) {
                         item.put("statetype", "我响应的，求助");
                         item.put("statename", userdata.response.get(i).title);
                         item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
                         item.put("stateanswer", userdata.response.get(i).num+"人响应");
                         userListData.add(item);
-                    } else if (userdata.launch.get(i).type == 2) {
+                    } else if (userdata.response.get(i).type == 2) {
                         item.put("statetype", "我响应的，求救");
                         item.put("statename", userdata.response.get(i).title);
                         item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
@@ -132,7 +207,7 @@ public class StateFragment extends Fragment {
             }
         });
     }
-    private List<Map<String, Object>> getlistData() {
+    /*private List<Map<String, Object>> getlistData() {
         String[] statename = new String[] {"请问有没有人帮忙拿一下快递？","请问有没有人帮忙领一下校园卡","请问有没有人帮忙拿一下快递？","请问中大热水怎么充值？","请问哪里有中大方格纸卖？"};
         String[] statetype = new String[] {"我响应的，求助","我发起的，求助","我发起的，求助","我发起的，提问","我回答的，提问"};
         String[] statetime = new String[] {"10分钟前","5小时前","1小时前","1天前","2小时前"};
@@ -149,5 +224,5 @@ public class StateFragment extends Fragment {
         }
         return ls;
 
-    }
+    }*/
 }
