@@ -62,7 +62,10 @@ public class AskFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
                 Bundle bundle = new Bundle();
-//                bundle.putString("title", someData.get(i).title);
+                bundle.putString("title", questionData.get(i).title);
+                bundle.putString("questioncontent", questionData.get(i).description);
+                bundle.putString("questionname", questionData.get(i).asker_username);
+                bundle.putString("anwsercount", questionData.get(i).date);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -99,11 +102,11 @@ public class AskFragment extends Fragment {
             public void onResponse(Call<QuestionsResult> call, Response<QuestionsResult> response) {
 
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (response.body().status != 200) {
-                    Toast.makeText(getContext(), "2", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "2", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -130,7 +133,7 @@ public class AskFragment extends Fragment {
 
             @Override
             public void onFailure(Call<QuestionsResult> call, Throwable t) {
-                ToastUtils.show(getContext(), t.toString());
+//                ToastUtils.show(getContext(), t.toString());
             }
         });
 

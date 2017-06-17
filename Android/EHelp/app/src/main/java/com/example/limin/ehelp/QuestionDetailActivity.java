@@ -41,6 +41,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.limin.ehelp.R.id.questionname;
+
 /**
  * Created by Yunzhao on 2017/5/13.
  */
@@ -64,6 +66,12 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     // 数据
     private String title;
+    private String questioncontent;
+    private String questionname;
+    private String anwsercount;
+
+    // 网络访问
+    private ApiService apiService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +81,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
         setTitle();
         findView();
         getData();
+        setView();
+
+        apiService = ApiService.retrofit.create(ApiService.class);
 
         btn_gohelp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +96,10 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
-//        title = bundle.getString("title");
+        title = bundle.getString("title");
+        questioncontent = bundle.getString("questioncontent");
+        questionname = bundle.getString("questionname");
+        anwsercount = bundle.getString("anwsercount");
     }
 
     private void setTitle() {
@@ -105,7 +119,12 @@ public class QuestionDetailActivity extends AppCompatActivity {
         tv_nextope.setVisibility(View.GONE);
     }
 
-
+    private void setView() {
+        questiondetailtitle.setText(title);
+        questiondetailcontent.setText(questioncontent);
+        questiondetailname.setText(questionname);
+        questiondetailtime.setText(anwsercount);
+    }
 
     private void findView() {
         avatar = (RoundedImageView) findViewById(R.id.avatar);
