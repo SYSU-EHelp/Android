@@ -62,6 +62,7 @@ public class AskFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putInt("id", questionData.get(i).id);
                 bundle.putString("title", questionData.get(i).title);
                 bundle.putString("questioncontent", questionData.get(i).description);
                 bundle.putString("questionname", questionData.get(i).asker_username);
