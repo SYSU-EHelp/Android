@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import retrofit2.Response;
 
 public class AskFragment extends Fragment {
     private ListView lv;
+    private TextView anwserquestion;
     private SimpleAdapter adapter;
     private List<QuestionBean> questionData = new ArrayList<QuestionBean>();
     private List<Map<String, Object>> questionListData = new ArrayList<Map<String, Object>>();
@@ -49,6 +51,8 @@ public class AskFragment extends Fragment {
         View root = inflater.inflate(R.layout.activity_questionslist, container, false);
 
         lv = (ListView)root.findViewById(R.id.questionslist);
+        anwserquestion = (TextView)root.findViewById(R.id.anwserquestion);
+
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
 
@@ -125,10 +129,9 @@ public class AskFragment extends Fragment {
                     item.put("questioncontent", questionData.get(i).description);
                     item.put("questionname", questionData.get(i).asker_username);
                     item.put("anwsercount", questionData.get(i).date);
-                    item.put("anwserquestion", "去回答");
+                    item.put("anwserquestion", "查看");
                     questionListData.add(item);
                 }
-
                 adapter.notifyDataSetChanged();
             }
 

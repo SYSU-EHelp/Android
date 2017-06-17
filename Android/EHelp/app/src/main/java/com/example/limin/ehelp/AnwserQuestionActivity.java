@@ -1,5 +1,6 @@
 package com.example.limin.ehelp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.limin.ehelp.networkservice.ApiService;
 import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.networkservice.QuestionDetailResult;
 import com.example.limin.ehelp.utility.ToastUtils;
 import com.google.gson.Gson;
 
@@ -37,6 +40,9 @@ public class AnwserQuestionActivity extends AppCompatActivity {
     // 数据
     private int id;
     private String title;
+    private String questioncontent;
+    private String questionname;
+    private String anwsercount;
 
     // 网络访问
     private ApiService apiService;
@@ -48,11 +54,11 @@ public class AnwserQuestionActivity extends AppCompatActivity {
 
         setTitle();
         findView();
-        anwserquestiontitle.setText(title);
+
 
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
-
+        anwserquestiontitle.setText(title);
     }
 
     private void setTitle() {
@@ -84,6 +90,17 @@ public class AnwserQuestionActivity extends AppCompatActivity {
                         if (response.body().status != 200) {
                             return;
                         }
+                        Toast.makeText(AnwserQuestionActivity.this, "回答成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(AnwserQuestionActivity.this, QuestionDetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", id);
+                        bundle.putString("title", title);
+                        bundle.putString("questioncontent", questioncontent);
+                        bundle.putString("questionname", questionname);
+                        bundle.putString("anwsercount", anwsercount);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        finish();
                     }
                     @Override
                     public void onFailure(Call<EmptyResult> call, Throwable t) {
@@ -97,6 +114,9 @@ public class AnwserQuestionActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getInt("id");
         title = bundle.getString("title");
+        questioncontent = bundle.getString("questioncontent");
+        questionname = bundle.getString("questionname");
+        anwsercount = bundle.getString("anwsercount");
     }
 
     private void findView() {

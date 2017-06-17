@@ -51,6 +51,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.limin.ehelp.R.id.questionDetail;
 import static com.example.limin.ehelp.R.id.questionname;
 import static java.security.AccessController.getContext;
 
@@ -94,7 +95,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questiondetail);
-
+        lv = (ListView) findViewById(R.id.anwserslist);
         apiService = ApiService.retrofit.create(ApiService.class);
 
         setTitle();
@@ -103,8 +104,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
         setView();
         getAnwserData();
 
-
-        lv = (ListView) findViewById(R.id.anwserslist);
         adapter = new SimpleAdapter(this,questionDetailListData,R.layout.layout_anwseritem,
                 new String[] {"anwsername", "anwsertime", "anwsercontent"},
                 new int[] {R.id.anwsername, R.id.anwsertime, R.id.anwsercontent});
@@ -117,8 +116,12 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", id);
                 bundle.putString("title", title);
+                bundle.putString("questioncontent", questioncontent);
+                bundle.putString("questionname", questionname);
+                bundle.putString("anwsercount", anwsercount);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -186,17 +189,18 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
                 questionDetailData.clear();
                 questionDetailData = response.body().data;
-//                 Toast.makeText(getContext(), "3", Toast.LENGTH_SHORT).show();
-                // 赋值至求助列表的list
+
                 questionDetailListData.clear();
+                questiondetailcount.setText(questionDetailData.size() + "人已回答");
+
                 for (int i = 0; i < questionDetailData.size(); i++) {
                     Map<String, Object> item = new HashMap<String, Object>();
                     item.put("anwsername", questionDetailData.get(i).answerer_username);
                     item.put("anwsercontent", questionDetailData.get(i).description);
                     item.put("anwsertime", questionDetailData.get(i).date);
                     questionDetailListData.add(item);
+                    adapter.notifyDataSetChanged();
                 }
-
                 adapter.notifyDataSetChanged();
             }
 
@@ -206,6 +210,13 @@ public class QuestionDetailActivity extends AppCompatActivity {
         });
 
     }
+
+//    @Override
+//    public void onResume() {
+//        getData();
+//        getAnwserData();
+//        super.onResume();
+//    }
 
 //    private List<Map<String, Object>> getData() {
 //        String[] anwsername = new String[] {"张三","张三","张三","张三","张三"};

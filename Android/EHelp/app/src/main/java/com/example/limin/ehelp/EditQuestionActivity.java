@@ -1,5 +1,6 @@
 package com.example.limin.ehelp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.limin.ehelp.networkservice.ApiService;
 import com.example.limin.ehelp.networkservice.EmptyResult;
@@ -91,6 +93,10 @@ public class EditQuestionActivity extends AppCompatActivity {
                         if (response.body().status != 200) {
                             return;
                         }
+                        Toast.makeText(EditQuestionActivity.this, "发提问成功", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(EditQuestionActivity.this, AskFragment.class);
+//                        startActivity(intent);
+                        finish();
                     }
                     @Override
                     public void onFailure(Call<EmptyResult> call, Throwable t) {
