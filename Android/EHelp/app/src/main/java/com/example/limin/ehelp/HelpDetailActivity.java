@@ -67,10 +67,9 @@ public class HelpDetailActivity extends AppCompatActivity {
     private TextView tv_time;
     private TextView tv_address;
     private Button btn_gohelp;
-    //private TextView tv_helpernum;
 
     // 数据
-    private int id;
+    private int id = 0;
     private String title;
     private String description;
     private String address;
@@ -95,7 +94,6 @@ public class HelpDetailActivity extends AppCompatActivity {
 
     // 本地数据
     private int helpingEventID;
-
     private boolean canHelp;
     private boolean isFinished = false;
 
@@ -113,18 +111,16 @@ public class HelpDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_helpdetail);
 
+        apiService = ApiService.retrofit.create(ApiService.class);
+
         SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
         helpingEventID = sp.getInt("id", -1);
+        if (helpingEventID != -1) {
+            updateHelpingState(helpingEventID);
+        }
 
         setTitle();
         findView();
-        getData();
-        setView();
-
-        canHelp = (helpingEventID == -1) & (finished == 0);
-        handler.postDelayed(task, 10 * 1000);
-
-        apiService = ApiService.retrofit.create(ApiService.class);
 
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         map.onCreate(savedInstanceState);
@@ -132,17 +128,18 @@ public class HelpDetailActivity extends AppCompatActivity {
         if (aMap == null) {
             aMap = map.getMap();
         }
-
         mUiSettings = aMap.getUiSettings();//实例化UiSettings类对象
         mUiSettings.setZoomControlsEnabled(false);
 
-        addMarker();
+        getDataAndInit();
+
+        canHelp = (helpingEventID == -1) & (finished == 0);
+        handler.postDelayed(task, 10 * 1000);
 
         if (canHelp)
             btn_gohelp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     //dialog参数设置
                     AlertDialog.Builder builder = new AlertDialog.Builder(HelpDetailActivity.this);  //先得到构造器
                     builder.setTitle("提示"); //设置标题
@@ -196,19 +193,45 @@ public class HelpDetailActivity extends AppCompatActivity {
             });
     }
 
-    private void getData() {
+    private void getDataAndInit() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getInt("id");
-        title = bundle.getString("title");
-        description = bundle.getString("description");
-        address = bundle.getString("address");
-        date = bundle.getString("date");
-        longitude = bundle.getDouble("longitude");
-        latitude = bundle.getDouble("latitude");
-        launcher_username = bundle.getString("launcher_username");
-        launcher_avatar = bundle.getString("launcher_avatar");
-        phone = bundle.getString("phone");
-        finished = bundle.getInt("finished");
+
+        Call<HelpDetailResult> call = apiService.requestHelpDetail(id);
+        call.enqueue(new Callback<HelpDetailResult>() {
+            @Override
+            public void onResponse(Call<HelpDetailResult> call, Response<HelpDetailResult> response) {
+
+                if (!response.isSuccessful()) {
+                    ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
+                    return;
+                }
+                //ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                HelpBean helpData = response.body().data;
+                title = helpData.title;
+                description = helpData.description;
+                address = helpData.address;
+                date = helpData.date;
+                longitude = helpData.longitude;
+                latitude = helpData.latitude;
+                launcher_username = helpData.launcher_username;
+                launcher_avatar = helpData.launcher_avatar;
+                phone = helpData.phone;
+                finished = helpData.finished;
+
+                setView();
+                addMarker();
+            }
+            @Override
+            public void onFailure(Call<HelpDetailResult> call, Throwable t) {
+                ToastUtils.show(HelpDetailActivity.this, t.toString());
+            }
+        });
+
     }
 
     private void setTitle() {
@@ -263,7 +286,6 @@ public class HelpDetailActivity extends AppCompatActivity {
         tv_address = (TextView) findViewById(R.id.tv_address);
         map = (MapView) findViewById(R.id.map);
         btn_gohelp = (Button) findViewById(R.id.btn_gohelp);
-        //tv_helpernum = (TextView) findViewById(R.id.tv_helpernum);
     }
 
     // 网络访问
@@ -328,6 +350,40 @@ public class HelpDetailActivity extends AppCompatActivity {
         aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
     }
 
+    private void updateHelpingState(int helpingEventID) {
+        //  获取求助的finish状态
+        Call<HelpStatusResult> call = apiService.requestHelpStatus(helpingEventID);
+        call.enqueue(new Callback<HelpStatusResult>() {
+            @Override
+            public void onResponse(Call<HelpStatusResult> call, Response<HelpStatusResult> response) {
+
+                if (!response.isSuccessful()) {
+                    ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
+                    return;
+                }
+                ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                HelpStatusBean helpStatus = response.body().data;
+                // 如果求助已结束，则更新UI
+                if (helpStatus.finished == 1) {
+                    // 清除本地存储的事件ID
+                    SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.remove("id");
+                    editor.commit();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HelpStatusResult> call, Throwable t) {
+                ToastUtils.show(HelpDetailActivity.this, t.toString());
+            }
+        });
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -356,6 +412,5 @@ public class HelpDetailActivity extends AppCompatActivity {
         //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
         map.onSaveInstanceState(outState);
     }
-
 
 }

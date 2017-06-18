@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="李四" />
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/tv_phone"
@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="请问有没有人能帮忙拿个快递？"
+                android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -79,7 +79,7 @@
                 android:paddingBottom="15dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="快递到了实在找不到人帮我去拿，一个小东西，不重的，希望有好心人帮我代拿一下，要不然晚上7点快递就要回去啦。我住至善园9号，希望好心人拿完能放至九楼下，或者晚上我去找你拿呀~"
+                android:text=""
                 android:textColor="@color/mGray"
                 android:textSize="14sp" />
 
@@ -97,7 +97,7 @@
                 android:layout_marginTop="15dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="发起时间：2017-04-26 14:35"
+                android:text=""
                 android:textColor="@color/mGray"
                 android:textSize="14sp" />
 
@@ -119,7 +119,7 @@
                 android:layout_marginTop="5dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="帮助地点：广州大学城中山大学明德园6号"
+                android:text=""
                 android:textColor="@color/mGray"
                 android:textSize="14sp" />
 

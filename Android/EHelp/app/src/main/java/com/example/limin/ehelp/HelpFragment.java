@@ -65,16 +65,6 @@ public class HelpFragment extends Fragment {
                 Intent intent = new Intent(getContext(), HelpDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", helpData.get(i).id);
-                bundle.putString("title", helpData.get(i).title);
-                bundle.putString("description", helpData.get(i).description);
-                bundle.putString("address", helpData.get(i).address);
-                bundle.putString("date", helpData.get(i).date);
-                bundle.putDouble("longitude", helpData.get(i).longitude);
-                bundle.putDouble("latitude", helpData.get(i).latitude);
-                bundle.putString("launcher_username", helpData.get(i).launcher_username);
-                bundle.putString("launcher_avatar", helpData.get(i).launcher_avatar);
-                bundle.putString("phone", helpData.get(i).phone);
-                bundle.putInt("finished", helpData.get(i).finished);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
