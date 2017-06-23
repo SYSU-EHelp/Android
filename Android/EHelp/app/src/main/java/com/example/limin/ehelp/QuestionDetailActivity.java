@@ -13,7 +13,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -28,18 +30,30 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.example.limin.ehelp.bean.QuestionDetailBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
 import com.example.limin.ehelp.networkservice.ApiService;
 import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.networkservice.QuestionDetailResult;
+import com.example.limin.ehelp.networkservice.QuestionsResult;
 import com.example.limin.ehelp.utility.ToastUtils;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.limin.ehelp.R.id.questionDetail;
+import static com.example.limin.ehelp.R.id.questionname;
+import static java.security.AccessController.getContext;
 
 /**
  * Created by Yunzhao on 2017/5/13.
@@ -63,29 +77,62 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private Button btn_gohelp;
 
     // 数据
+    private int id;
     private String title;
+    private String questioncontent;
+    private String questionname;
+    private String anwsercount;
+
+    // 网络访问
+    private ApiService apiService;
+    private List<QuestionDetailBean> questionDetailData = new ArrayList<QuestionDetailBean>();
+    private List<Map<String, Object>> questionDetailListData = new ArrayList<Map<String, Object>>();
+
+    private ListView lv;
+    private SimpleAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questiondetail);
+        lv = (ListView) findViewById(R.id.anwserslist);
+        apiService = ApiService.retrofit.create(ApiService.class);
 
         setTitle();
         findView();
         getData();
+        setView();
+        getAnwserData();
+
+        adapter = new SimpleAdapter(this,questionDetailListData,R.layout.layout_anwseritem,
+                new String[] {"anwsername", "anwsertime", "anwsercontent"},
+                new int[] {R.id.anwsername, R.id.anwsertime, R.id.anwsercontent});
+        lv.setAdapter(adapter);
 
         btn_gohelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(QuestionDetailActivity.this, AnwserQuestionActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", id);
+                bundle.putString("title", title);
+                bundle.putString("questioncontent", questioncontent);
+                bundle.putString("questionname", questionname);
+                bundle.putString("anwsercount", anwsercount);
+                intent.putExtras(bundle);
                 startActivity(intent);
+                finish();
             }
         });
     }
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
-//        title = bundle.getString("title");
+        id = bundle.getInt("id");
+        title = bundle.getString("title");
+        questioncontent = bundle.getString("questioncontent");
+        questionname = bundle.getString("questionname");
+        anwsercount = bundle.getString("anwsercount");
     }
 
     private void setTitle() {
@@ -105,7 +152,12 @@ public class QuestionDetailActivity extends AppCompatActivity {
         tv_nextope.setVisibility(View.GONE);
     }
 
-
+    private void setView() {
+        questiondetailtitle.setText(title);
+        questiondetailcontent.setText(questioncontent);
+        questiondetailname.setText(questionname);
+        questiondetailtime.setText(anwsercount);
+    }
 
     private void findView() {
         avatar = (RoundedImageView) findViewById(R.id.avatar);
@@ -117,4 +169,69 @@ public class QuestionDetailActivity extends AppCompatActivity {
         anwserslist = (ListView) findViewById(R.id.anwserslist);
         btn_gohelp = (Button) findViewById(R.id.btn_gohelp);
     }
+
+    // 网络访问
+    private void getAnwserData() {
+        Call<QuestionDetailResult> call = apiService.requestQuestionDetail(id);
+        call.enqueue(new Callback<QuestionDetailResult>() {
+            @Override
+            public void onResponse(Call<QuestionDetailResult> call, Response<QuestionDetailResult> response) {
+
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                if (response.body().status != 200) {
+                    return;
+                }
+
+                //ToastUtils.show(getContext(), new Gson().toJson(response.body()));
+                // 获取求助事件的所有数据list
+
+                questionDetailData.clear();
+                questionDetailData = response.body().data;
+
+                questionDetailListData.clear();
+                questiondetailcount.setText(questionDetailData.size() + "人已回答");
+
+                for (int i = 0; i < questionDetailData.size(); i++) {
+                    Map<String, Object> item = new HashMap<String, Object>();
+                    item.put("anwsername", questionDetailData.get(i).answerer_username);
+                    item.put("anwsercontent", questionDetailData.get(i).description);
+                    item.put("anwsertime", questionDetailData.get(i).date);
+                    questionDetailListData.add(item);
+                    adapter.notifyDataSetChanged();
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<QuestionDetailResult> call, Throwable t) {
+            }
+        });
+
+    }
+
+//    @Override
+//    public void onResume() {
+//        getData();
+//        getAnwserData();
+//        super.onResume();
+//    }
+
+//    private List<Map<String, Object>> getData() {
+//        String[] anwsername = new String[] {"张三","张三","张三","张三","张三"};
+//        String[] anwsertime = new String[] {"3分钟前","3分钟前","3分钟前","3分钟前","3分钟前"};
+//        String[] anwsercontent = new String[] {"一般都是刷校卡就行，有些校车要用现金","一般都是刷校卡就行，有些校车要用现金","一般都是刷校卡就行，有些校车要用现金","一般都是刷校卡就行，有些校车要用现金","一般都是刷校卡就行，有些校车要用现金"};
+//
+//        List<Map<String, Object>> ls = new ArrayList<Map<String, Object>>();
+//        for (int i = 0;i<anwsername.length;i++) {
+//            Map<String, Object> temp = new HashMap<>();
+//            temp.put("anwsername",anwsername[i]);
+//            temp.put("anwsertime",anwsertime[i]);
+//            temp.put("anwsercontent", anwsercontent[i]);
+//            ls.add(temp);
+//        }
+//        return ls;
+//
+//    }
 }

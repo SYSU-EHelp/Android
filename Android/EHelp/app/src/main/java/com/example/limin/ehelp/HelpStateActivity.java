@@ -74,6 +74,8 @@ public class HelpStateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_helpstate);
 
+        apiService = ApiService.retrofit.create(ApiService.class);
+
         // 接收上个页面传来的数据
         Bundle bundle = this.getIntent().getExtras();
         helpTitle = bundle.getString("title");
@@ -83,9 +85,10 @@ public class HelpStateActivity extends AppCompatActivity {
         setTitle();
         findView();
         initView();
-        handler.postDelayed(task, 5*1000);
 
-        apiService = ApiService.retrofit.create(ApiService.class);
+        getHelperAndRefresh();
+
+        handler.postDelayed(task, 5*1000);
 
         // 设置响应者列表
         adapter = new SimpleAdapter(this, responserlist, R.layout.layout_helperitem,

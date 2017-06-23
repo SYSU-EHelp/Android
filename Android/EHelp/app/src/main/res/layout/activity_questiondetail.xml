@@ -107,12 +107,12 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/mLightGray" />
 
-            <ListView
+            <com.example.limin.ehelp.MyListView
                 android:id="@+id/anwserslist"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="40dp"
                 android:scrollbars="none"/>
-
         </LinearLayout>
     </ScrollView>
 

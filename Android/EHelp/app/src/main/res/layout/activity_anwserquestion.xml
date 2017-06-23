@@ -7,16 +7,16 @@
 
     <include layout="@layout/layout_titlebar"/>
 
-    <EditText
+    <TextView
         android:id="@+id/anwserquestiontitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:hint="请问中大的校车要怎么买票？"
         android:maxLines="1"
         android:paddingBottom="15dp"
         android:paddingTop="15dp"
         android:layout_marginLeft="15dp"
+        android:text="请问中大的校车怎么买票"
         android:textSize="@dimen/mainTextSize" />
 
     <View

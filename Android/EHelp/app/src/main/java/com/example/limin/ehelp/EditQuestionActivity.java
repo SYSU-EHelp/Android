@@ -1,5 +1,6 @@
 package com.example.limin.ehelp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.EmptyResult;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -26,6 +35,8 @@ public class EditQuestionActivity extends AppCompatActivity {
     private TextView editquestionwordcount;
     private EditText editquestioncontent;
 
+    // 网络访问
+    private ApiService apiService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +46,7 @@ public class EditQuestionActivity extends AppCompatActivity {
         setTitle();
         findView();
 
+        apiService = ApiService.retrofit.create(ApiService.class);
 
         // 更新求助标题字数统计
         editquestiontitle.addTextChangedListener(new TextWatcher() {
@@ -66,6 +78,32 @@ public class EditQuestionActivity extends AppCompatActivity {
 
         tv_title.setText("发提问");
         tv_nextope.setText("发送");
+
+        tv_nextope.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<EmptyResult> call = apiService.requestAddQuestion(editquestiontitle.getText().toString(), editquestioncontent.getText().toString());
+                call.enqueue(new Callback<EmptyResult>() {
+                    @Override
+                    public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            return;
+                        }
+                        Toast.makeText(EditQuestionActivity.this, "发提问成功", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(EditQuestionActivity.this, AskFragment.class);
+//                        startActivity(intent);
+                        finish();
+                    }
+                    @Override
+                    public void onFailure(Call<EmptyResult> call, Throwable t) {
+                    }
+                });
+            }
+        });
     }
 
 
