@@ -62,8 +62,12 @@ public class StateFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position >= 0 && position < userdata.launch.size()) {
                     if (userdata.launch.get(position).type == 0) {
-
                         //我发起的提问
+                        Intent intent = new Intent(getContext(), AnwserQuestionActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", userdata.launch.get(position).id);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
                     } else if (userdata.launch.get(position).type == 1 && userdata.launch.get(position).finished == 0) {
                         Intent intent = new Intent(getContext(), HelpStateActivity.class);
@@ -85,8 +89,12 @@ public class StateFragment extends Fragment {
                 } else {
                     int l = position-userdata.launch.size();
                     if (userdata.response.get(l).type == 0) {
-
                         //我响应的提问
+                        Intent intent = new Intent(getContext(), AnwserQuestionActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", userdata.response.get(l).id);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
                     } else if (userdata.response.get(l).type == 1) {
                         Intent intent = new Intent(getContext(), HelpDetailActivity.class);
