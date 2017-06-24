@@ -2,8 +2,10 @@ package com.example.limin.ehelp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +41,24 @@ public class StateFragment extends Fragment {
     private ApiService apiService;
     private UserBean userdata;
     private SimpleAdapter adapter;
+    private SwipeRefreshLayout refreshlayout;
+    private static final int REFRESH_COMPLETE = 0X110;
+
     private List<UserBean.Launch> launch = new ArrayList<>();
     private List<UserBean.Response> response = new ArrayList<>();
     private List<Map<String, Object>> userListData = new ArrayList<Map<String, Object>>();
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case REFRESH_COMPLETE:
+                    getData();
+                    adapter.notifyDataSetChanged();
+                    refreshlayout.setRefreshing(false);
+                    break;
+            }
+        };
+    };
 
 
     @Nullable
@@ -50,6 +67,16 @@ public class StateFragment extends Fragment {
         View root = inflater.inflate(R.layout.activity_statelist, container, false);
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
+
+        refreshlayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshlayout);
+        refreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHandler.sendEmptyMessageDelayed(REFRESH_COMPLETE, 2000);
+            }
+        });
+        refreshlayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
+                android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
         lv = (ListView)root.findViewById(R.id.statelist);
         adapter = new SimpleAdapter(getContext(),userListData,R.layout.layout_stateitem,
