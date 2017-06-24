@@ -147,16 +147,16 @@ public class Information extends AppCompatActivity {
         });
 
         title.setText("个人信息");
-
-        next.setOnClickListener(new View.OnClickListener() {
+        next.setText("");
+        /*next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String un = username.getText().toString();
                 String ph = phone.getText().toString();
                 //这里需要将个人信息数据传入数据库
-                /*Toast.makeText(Information.this, "修改个人信息成功!", Toast.LENGTH_SHORT).show();*/
+                Toast.makeText(Information.this, "修改个人信息成功!", Toast.LENGTH_SHORT).show();
                 finish();
             }
-        });
+        });*/
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -71,9 +72,29 @@ public class EmergencyContact extends AppCompatActivity {
                 new String[] {"username", "phone"}, new int[] {R.id.username, R.id.phone});
         lv.setAdapter(simpleAdapter);
 
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                new AlertDialog.Builder(EmergencyContact.this).setTitle("删除紧急联系人").setMessage("确定要删除吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                contact.remove(position);
+                                simpleAdapter.notifyDataSetChanged();
+
+                            }
+                        }).setNegativeButton("取消",null).show();
+                return false;
+            }
+        });
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (contact.size() > 4) {
+                    Toast.makeText(getApplicationContext(),"紧急联系人已经达到5个上限！请长按联系人删除",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 LayoutInflater inflater = getLayoutInflater();
                 View layout = inflater.inflate(R.layout.add_dialog, (ViewGroup)findViewById(R.id.add_dialog));
                 final EditText addname = (EditText)layout.findViewById(R.id.add_name);
@@ -85,6 +106,16 @@ public class EmergencyContact extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 final String add_name = addname.getText().toString();
                                 final String add_phone = addphone.getText().toString();
+                                if (add_phone.length() != 11) {
+                                    Toast.makeText(getApplicationContext(),"请输入11位有效手机号！",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                for (int i = 0; i < contact.size(); i++) {
+                                    if (add_phone.equals(contact.get(i).get("phone").toString())){
+                                        Toast.makeText(getApplicationContext(),"此手机号已经存在!",Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                }
                                 Map<String, Object> temp2 = new LinkedHashMap<>();
                                 temp2.put("username", add_name);
                                 temp2.put("phone", add_phone);
@@ -169,7 +200,6 @@ public class EmergencyContact extends AppCompatActivity {
         next = (TextView) findViewById(R.id.tv_nextope);
         message = (TextView)findViewById(R.id.add_message);
 
-        next.setText("保存");
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,7 +209,8 @@ public class EmergencyContact extends AppCompatActivity {
         });
 
         title.setText("紧急联系人");
-        next.setOnClickListener(new View.OnClickListener() {
+        next.setText("");
+        /*next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String msg = message.getText().toString();
@@ -187,7 +218,7 @@ public class EmergencyContact extends AppCompatActivity {
                 Toast.makeText(EmergencyContact.this, "保存成功!", Toast.LENGTH_SHORT).show();
                 finish();
             }
-        });
+        });*/
 
     }
 }

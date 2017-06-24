@@ -2,8 +2,10 @@ package com.example.limin.ehelp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +41,24 @@ public class StateFragment extends Fragment {
     private ApiService apiService;
     private UserBean userdata;
     private SimpleAdapter adapter;
+    private SwipeRefreshLayout refreshlayout;
+    private static final int REFRESH_COMPLETE = 0X110;
+
     private List<UserBean.Launch> launch = new ArrayList<>();
     private List<UserBean.Response> response = new ArrayList<>();
     private List<Map<String, Object>> userListData = new ArrayList<Map<String, Object>>();
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case REFRESH_COMPLETE:
+                    getData();
+                    adapter.notifyDataSetChanged();
+                    refreshlayout.setRefreshing(false);
+                    break;
+            }
+        };
+    };
 
 
     @Nullable
@@ -50,6 +67,16 @@ public class StateFragment extends Fragment {
         View root = inflater.inflate(R.layout.activity_statelist, container, false);
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
+
+        refreshlayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshlayout);
+        refreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHandler.sendEmptyMessageDelayed(REFRESH_COMPLETE, 2000);
+            }
+        });
+        refreshlayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
+                android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
         lv = (ListView)root.findViewById(R.id.statelist);
         adapter = new SimpleAdapter(getContext(),userListData,R.layout.layout_stateitem,
@@ -63,7 +90,7 @@ public class StateFragment extends Fragment {
                 if (position >= 0 && position < userdata.launch.size()) {
                     if (userdata.launch.get(position).type == 0) {
                         //我发起的提问
-                        Intent intent = new Intent(getContext(), AnwserQuestionActivity.class);
+                        Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", userdata.launch.get(position).id);
                         intent.putExtras(bundle);
@@ -83,14 +110,15 @@ public class StateFragment extends Fragment {
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else if (userdata.launch.get(position).type == 2) {
-                        Toast.makeText(getContext(), "您的求救正在进行中", Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), "您的求救正在进行中", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
                     int l = position-userdata.launch.size();
                     if (userdata.response.get(l).type == 0) {
+
                         //我响应的提问
-                        Intent intent = new Intent(getContext(), AnwserQuestionActivity.class);
+                        Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", userdata.response.get(l).id);
                         intent.putExtras(bundle);
@@ -178,7 +206,7 @@ public class StateFragment extends Fragment {
                         item.put("statetype", "我发起的，求救");
                         item.put("statename", userdata.launch.get(i).title);
                         item.put("statetime", userdata.launch.get(i).date);
-                        item.put("stateanswer", userdata.launch.get(i).num+"人响应");
+                        item.put("stateanswer", "救援人员正在火速赶来！");
                         userListData.add(item);
                     }
                 }
