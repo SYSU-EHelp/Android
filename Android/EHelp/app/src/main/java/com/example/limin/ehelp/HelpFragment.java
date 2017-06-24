@@ -2,8 +2,10 @@ package com.example.limin.ehelp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,8 @@ public class HelpFragment extends Fragment {
 
     private ListView helpeventlist;
     private SimpleAdapter adapter;
+    private SwipeRefreshLayout refreshlayout;
+    private static final int REFRESH_COMPLETE = 0X110;
 
     private List<HelpBean> helpData = new ArrayList<HelpBean>();
     private List<Map<String, Object>> helpListData = new ArrayList<Map<String, Object>>();
@@ -44,14 +48,36 @@ public class HelpFragment extends Fragment {
     // 网络访问
     private ApiService apiService;
 
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case REFRESH_COMPLETE:
+                    getData();
+                    adapter.notifyDataSetChanged();
+                    refreshlayout.setRefreshing(false);
+                    break;
+            }
+        };
+    };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.activity_helplist, container, false);
+        final View root = inflater.inflate(R.layout.activity_helplist, container, false);
 
         helpeventlist = (ListView) root.findViewById(R.id.helpeventlist);
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
+
+        refreshlayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshlayout);
+        refreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHandler.sendEmptyMessageDelayed(REFRESH_COMPLETE, 2000);
+            }
+        });
+        refreshlayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
+                android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
         adapter = new SimpleAdapter(getContext(), helpListData, R.layout.layout_helpeventitem,
                 new String[]{"title", "content", "avatar", "name", "address"},
