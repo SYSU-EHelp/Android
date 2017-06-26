@@ -113,6 +113,9 @@ public interface ApiService {
     @GET("/api/users/{user_id}/information")
     Call<UserInfoResult> requestUserInfo(@Path("user_id") int user_id);
 
+    @PATCH("/api/users/contacts")
+    Call<EmptyResult> requestDeleteContact(@Query("username") String username);
+
 
     static final Interceptor interceptor = new Interceptor() {
         @Override

@@ -695,5 +695,36 @@ public class APITestActivity extends AppCompatActivity {
         });
 
 
+        // 删除急联系人
+        //  获取用户基本消息
+        Button deleteContact = (Button) findViewById(R.id.deleteContact);
+        deleteContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<EmptyResult> call = apiService.requestDeleteContact("guo");
+                call.enqueue(new Callback<EmptyResult>() {
+                    @Override
+                    public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                        if (!response.isSuccessful()) {
+                            ToastUtils.show(APITestActivity.this, ToastUtils.SERVER_ERROR);
+                            return;
+                        }
+                        if (response.body().status != 200) {
+                            ToastUtils.show(APITestActivity.this, response.body().errmsg);
+                            return;
+                        }
+                        ToastUtils.show(APITestActivity.this, new Gson().toJson(response.body()));
+                    }
+                    @Override
+                    public void onFailure(Call<EmptyResult> call, Throwable t) {
+                        ToastUtils.show(APITestActivity.this, t.toString());
+                    }
+                });
+            }
+        });
+
+
     }
 }
