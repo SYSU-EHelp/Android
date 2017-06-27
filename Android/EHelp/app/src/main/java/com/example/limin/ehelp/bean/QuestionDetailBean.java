@@ -9,4 +9,5 @@ public class QuestionDetailBean {
     public String answerer_avatar;
     public String description;
     public String date;
+    public String title;
 }

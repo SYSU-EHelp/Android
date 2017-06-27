@@ -78,7 +78,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     // 数据
     private int id;
-    private String title;
+    private String questiontitle;
     private String questioncontent;
     private String questionname;
     private String anwserdate;
@@ -101,8 +101,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
         setTitle();
         findView();
         getData();
-        setView();
         getAnwserData();
+//        setView();
 
         adapter = new SimpleAdapter(this,questionDetailListData,R.layout.layout_anwseritem,
                 new String[] {"anwsername", "anwsertime", "anwsercontent"},
@@ -115,7 +115,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(QuestionDetailActivity.this, AnwserQuestionActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", id);
-                bundle.putString("title", title);
+                bundle.putString("questiontitle", questiontitle);
                 bundle.putString("questioncontent", questioncontent);
                 bundle.putString("questionname", questionname);
                 bundle.putString("anwserdate", anwserdate);
@@ -129,10 +129,10 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getInt("id");
-        title = bundle.getString("title");
-        questioncontent = bundle.getString("questioncontent");
+//        questiontitle = bundle.getString("questiontitle");
+//        questioncontent = bundle.getString("questioncontent");
         questionname = bundle.getString("questionname");
-        anwserdate = bundle.getString("anwserdate");
+//        anwserdate = bundle.getString("anwserdate");
     }
 
     private void setTitle() {
@@ -153,7 +153,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     }
 
     private void setView() {
-        questiondetailtitle.setText(title);
+        questiondetailtitle.setText(questiontitle);
         questiondetailcontent.setText(questioncontent);
         questiondetailname.setText(questionname);
         questiondetailtime.setText(anwserdate);
@@ -191,9 +191,12 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 questionDetailData = response.body().data;
 
                 questionDetailListData.clear();
-                questiondetailcount.setText(questionDetailData.size() + "人已回答");
+                questiondetailcount.setText(questionDetailData.size() - 1 + "人已回答");
 
-                for (int i = 0; i < questionDetailData.size(); i++) {
+                questiontitle = questionDetailData.get(0).title;
+                questioncontent = questionDetailData.get(0).description;
+                anwserdate = questionDetailData.get(0).date;
+                for (int i = 1; i < questionDetailData.size(); i++) {
                     Map<String, Object> item = new HashMap<String, Object>();
                     item.put("anwsername", questionDetailData.get(i).answerer_username);
                     item.put("anwsercontent", questionDetailData.get(i).description);
@@ -202,6 +205,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                 }
                 adapter.notifyDataSetChanged();
+                setView();
             }
 
             @Override

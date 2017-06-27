@@ -84,6 +84,7 @@ public class AskFragment extends Fragment {
         refreshlayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
+        getData();
         adapter = new SimpleAdapter(getContext(),questionListData,R.layout.layout_questionitem,
                 new String[] {"questiontitle", "questioncontent", "questionname", "anwserdate","anwserquestion"},
                 new int[] {R.id.questiontitle, R.id.questioncontent, R.id.questionname, R.id.anwserdate, R.id.anwserquestion});
@@ -95,7 +96,7 @@ public class AskFragment extends Fragment {
                 Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", questionData.get(i).id);
-                bundle.putString("title", questionData.get(i).title);
+                bundle.putString("questiontitle", questionData.get(i).title);
                 bundle.putString("questioncontent", questionData.get(i).description);
                 bundle.putString("questionname", questionData.get(i).asker_username);
                 bundle.putString("anwserdate", questionData.get(i).date);

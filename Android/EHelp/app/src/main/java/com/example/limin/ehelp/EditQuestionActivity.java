@@ -82,26 +82,30 @@ public class EditQuestionActivity extends AppCompatActivity {
         tv_nextope.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call<EmptyResult> call = apiService.requestAddQuestion(editquestiontitle.getText().toString(), editquestioncontent.getText().toString());
-                call.enqueue(new Callback<EmptyResult>() {
-                    @Override
-                    public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+                if (!editquestiontitle.getText().toString().isEmpty() && !editquestioncontent.getText().toString().isEmpty()) {
+                    Call<EmptyResult> call = apiService.requestAddQuestion(editquestiontitle.getText().toString(), editquestioncontent.getText().toString());
+                    call.enqueue(new Callback<EmptyResult>() {
+                        @Override
+                        public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
 
-                        if (!response.isSuccessful()) {
-                            return;
-                        }
-                        if (response.body().status != 200) {
-                            return;
-                        }
-                        Toast.makeText(EditQuestionActivity.this, "发提问成功", Toast.LENGTH_SHORT).show();
+                            if (!response.isSuccessful()) {
+                                return;
+                            }
+                            if (response.body().status != 200) {
+                                return;
+                            }
+                            Toast.makeText(EditQuestionActivity.this, "发提问成功", Toast.LENGTH_SHORT).show();
 //                        Intent intent = new Intent(EditQuestionActivity.this, AskFragment.class);
 //                        startActivity(intent);
-                        finish();
-                    }
-                    @Override
-                    public void onFailure(Call<EmptyResult> call, Throwable t) {
-                    }
-                });
+                            finish();
+                        }
+                        @Override
+                        public void onFailure(Call<EmptyResult> call, Throwable t) {
+                        }
+                    });
+                } else {
+                    Toast.makeText(EditQuestionActivity.this, "标题和内容均不能为空", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

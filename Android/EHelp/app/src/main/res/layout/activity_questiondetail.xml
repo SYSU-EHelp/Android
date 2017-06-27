@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="请问中大的校车要怎么买票？"
+                android:text="~"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -77,7 +77,7 @@
                 android:paddingBottom="15dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="我是中大南校区的学生，今天来东校参加一个定向越野赛，晚上向坐校车回南校。大一小白，没做过校车，请教一下各位，坐校车要多少钱，怎么支付，在哪里能看到几点发车那些相关信息呀~"
+                android:text="~"
                 android:textColor="@color/mGray"
                 android:textSize="14sp" />
 

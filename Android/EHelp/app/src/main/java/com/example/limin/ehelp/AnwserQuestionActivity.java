@@ -39,10 +39,10 @@ public class AnwserQuestionActivity extends AppCompatActivity {
 
     // 数据
     private int id;
-    private String title;
+    private String questiontitle;
     private String questioncontent;
     private String questionname;
-    private String anwsercount;
+    private String anwserdate;
 
     // 网络访问
     private ApiService apiService;
@@ -58,7 +58,7 @@ public class AnwserQuestionActivity extends AppCompatActivity {
 
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
-        anwserquestiontitle.setText(title);
+        anwserquestiontitle.setText(questiontitle);
     }
 
     private void setTitle() {
@@ -94,10 +94,10 @@ public class AnwserQuestionActivity extends AppCompatActivity {
                         Intent intent = new Intent(AnwserQuestionActivity.this, QuestionDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", id);
-                        bundle.putString("title", title);
+                        bundle.putString("questiontitle", questiontitle);
                         bundle.putString("questioncontent", questioncontent);
                         bundle.putString("questionname", questionname);
-                        bundle.putString("anwsercount", anwsercount);
+                        bundle.putString("anwserdate", anwserdate);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         finish();
@@ -113,10 +113,10 @@ public class AnwserQuestionActivity extends AppCompatActivity {
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getInt("id");
-        title = bundle.getString("title");
+        questiontitle = bundle.getString("questiontitle");
         questioncontent = bundle.getString("questioncontent");
         questionname = bundle.getString("questionname");
-        anwsercount = bundle.getString("anwsercount");
+        anwserdate = bundle.getString("anwserdate");
     }
 
     private void findView() {
