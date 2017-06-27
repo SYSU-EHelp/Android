@@ -81,7 +81,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private String title;
     private String questioncontent;
     private String questionname;
-    private String anwsercount;
+    private String anwserdate;
 
     // 网络访问
     private ApiService apiService;
@@ -118,7 +118,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 bundle.putString("title", title);
                 bundle.putString("questioncontent", questioncontent);
                 bundle.putString("questionname", questionname);
-                bundle.putString("anwsercount", anwsercount);
+                bundle.putString("anwserdate", anwserdate);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
@@ -132,7 +132,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         title = bundle.getString("title");
         questioncontent = bundle.getString("questioncontent");
         questionname = bundle.getString("questionname");
-        anwsercount = bundle.getString("anwsercount");
+        anwserdate = bundle.getString("anwserdate");
     }
 
     private void setTitle() {
@@ -156,7 +156,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         questiondetailtitle.setText(title);
         questiondetailcontent.setText(questioncontent);
         questiondetailname.setText(questionname);
-        questiondetailtime.setText(anwsercount);
+        questiondetailtime.setText(anwserdate);
     }
 
     private void findView() {
