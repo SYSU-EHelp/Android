@@ -60,6 +60,7 @@ public class HelpFragment extends Fragment {
         };
     };
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,11 +109,11 @@ public class HelpFragment extends Fragment {
 
                 if (!response.isSuccessful()) {
                     //ToastUtils.show(getContext(), ToastUtils.SERVER_ERROR);
-                    Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "1", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (response.body().status != 200) {
-                    Toast.makeText(getContext(), "2", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "2", Toast.LENGTH_SHORT).show();
                     //ToastUtils.show(getContext(), response.body().errmsg);
                     return;
                 }
