@@ -110,7 +110,7 @@ public class StateFragment extends Fragment {
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else if (userdata.launch.get(position).type == 2) {
-                        Toast.makeText(getContext(), "您的求救正在进行中", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "您的紧急求救信息已经发送！", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
@@ -206,7 +206,7 @@ public class StateFragment extends Fragment {
                         item.put("statetype", "我发起的，求救");
                         item.put("statename", userdata.launch.get(i).title);
                         item.put("statetime", userdata.launch.get(i).date);
-                        item.put("stateanswer", "救援人员正在火速赶来！");
+                        item.put("stateanswer", "您的紧急求救信息已经发送");
                         userListData.add(item);
                     }
                 }
