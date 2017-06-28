@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.example.limin.ehelp.bean.HelpBean;
 import com.example.limin.ehelp.bean.UserBean;
+import com.example.limin.ehelp.bean.UserInfoBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
 import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.UserInfoResult;
 import com.example.limin.ehelp.networkservice.UserResult;
 import com.example.limin.ehelp.utility.CurrentUser;
 import com.example.limin.ehelp.utility.ToastUtils;
@@ -42,6 +44,9 @@ public class StateFragment extends Fragment {
     private ListView lv;
     private ApiService apiService;
     private UserBean userdata;
+    private UserInfoBean userInfoBean;
+    private String username;
+
     private SimpleAdapter adapter;
     private SwipeRefreshLayout refreshlayout;
     private static final int REFRESH_COMPLETE = 0X110;
@@ -94,6 +99,29 @@ public class StateFragment extends Fragment {
                         //我发起的提问
                         Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
                         Bundle bundle = new Bundle();
+                        Call<UserInfoResult> call = apiService.requestUserInfo(CurrentUser.id);
+                        call.enqueue(new Callback<UserInfoResult>() {
+                            @Override
+                            public void onResponse(Call<UserInfoResult> call, Response<UserInfoResult> response) {
+
+                                if (!response.isSuccessful()) {
+                                    ToastUtils.show(getContext(), ToastUtils.SERVER_ERROR);
+                                    return;
+                                }
+                                if (response.body().status != 200) {
+                                    ToastUtils.show(getContext(), response.body().errmsg);
+                                    return;
+                                }
+                                ToastUtils.show(getContext(), new Gson().toJson(response.body()));
+                                userInfoBean = response.body().data;
+                                username = userInfoBean.username.toString();
+                            }
+                            @Override
+                            public void onFailure(Call<UserInfoResult> call, Throwable t) {
+                                ToastUtils.show(getContext(), t.toString());
+                            }
+                        });
+                        bundle.putString("questionname", username);
                         bundle.putInt("id", userdata.launch.get(position).id);
                         intent.putExtras(bundle);
                         startActivity(intent);
