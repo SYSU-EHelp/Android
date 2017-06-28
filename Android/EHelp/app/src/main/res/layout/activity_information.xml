@@ -102,11 +102,11 @@
             android:text="姓名"
             android:layout_gravity="center"
             android:textSize="18dp"/>
-        <TextView
+        <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/name"
-            android:textSize="20dp"
+            android:textSize="18dp"
             style="@style/input_box"
             android:text="罗俊"
             android:layout_marginLeft="20dp"
@@ -130,11 +130,11 @@
             android:text="性别"
             android:layout_gravity="center"
             android:textSize="18dp"/>
-        <TextView
+        <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/gender"
-            android:textSize="20dp"
+            android:textSize="18dp"
             style="@style/input_box"
             android:text="男"
             android:layout_marginLeft="20dp"

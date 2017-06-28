@@ -1,11 +1,13 @@
 package com.example.limin.ehelp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +113,13 @@ public class StateFragment extends Fragment {
                         startActivity(intent);
                     } else if (userdata.launch.get(position).type == 2) {
                         Toast.makeText(getContext(), "您的紧急求救信息已经发送！", Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(getContext()).setTitle("求救事件确认").setMessage("确认求救完成？点击确认将移除此求救事件")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                }).setNegativeButton("取消",null).show();
                     }
 
                 } else {
@@ -121,6 +130,7 @@ public class StateFragment extends Fragment {
                         Intent intent = new Intent(getContext(), QuestionDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", userdata.response.get(l).id);
+                        bundle.putString("questionname", userdata.response.get(l).launcher_username);
                         intent.putExtras(bundle);
                         startActivity(intent);
 
@@ -128,6 +138,7 @@ public class StateFragment extends Fragment {
                         Intent intent = new Intent(getContext(), HelpDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", userdata.response.get(l).id);
+
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -194,14 +205,23 @@ public class StateFragment extends Fragment {
                         item.put("statetype", "我发起的，提问");
                         item.put("statename", userdata.launch.get(i).title);
                         item.put("statetime", userdata.launch.get(i).date);
-                        item.put("stateanswer", userdata.launch.get(i).num+"人响应");
+                        item.put("stateanswer", userdata.launch.get(i).num+"人回答");
                         userListData.add(item);
                     } else if (userdata.launch.get(i).type == 1) {
-                        item.put("statetype", "我发起的，求助");
-                        item.put("statename", userdata.launch.get(i).title);
-                        item.put("statetime", userdata.launch.get(i).date);
-                        item.put("stateanswer", userdata.launch.get(i).num+"人响应");
-                        userListData.add(item);
+                        if (userdata.launch.get(i).finished == 0) {
+                            item.put("statetype", "我发起的，求助");
+                            item.put("statename", userdata.launch.get(i).title);
+                            item.put("statetime", userdata.launch.get(i).date);
+                            item.put("stateanswer", userdata.launch.get(i).num+"人响应");
+                            userListData.add(item);
+                        } else {
+                            item.put("statetype", "我发起的，求助");
+                            item.put("statename", userdata.launch.get(i).title);
+                            item.put("statetime", userdata.launch.get(i).date);
+                            item.put("stateanswer", "求助事件已经结束");
+                            userListData.add(item);
+                        }
+
                     } else if (userdata.launch.get(i).type == 2) {
                         item.put("statetype", "我发起的，求救");
                         item.put("statename", userdata.launch.get(i).title);
@@ -217,14 +237,23 @@ public class StateFragment extends Fragment {
                         item.put("statetype", "我响应的，提问");
                         item.put("statename", userdata.response.get(i).title);
                         item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
-                        item.put("stateanswer", userdata.response.get(i).num+"人响应");
+                        item.put("stateanswer", userdata.response.get(i).num+"人回答");
                         userListData.add(item);
                     } else if (userdata.response.get(i).type == 1) {
-                        item.put("statetype", "我响应的，求助");
-                        item.put("statename", userdata.response.get(i).title);
-                        item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
-                        item.put("stateanswer", userdata.response.get(i).num+"人响应");
-                        userListData.add(item);
+                        if (userdata.response.get(i).finished == 0) {
+                            item.put("statetype", "我响应的，求助");
+                            item.put("statename", userdata.response.get(i).title);
+                            item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
+                            item.put("stateanswer", userdata.response.get(i).num+"人响应");
+                            userListData.add(item);
+                        } else {
+                            item.put("statetype", "我响应的，求助");
+                            item.put("statename", userdata.response.get(i).title);
+                            item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
+                            item.put("stateanswer", "求助事件已经结束");
+                            userListData.add(item);
+                        }
+
                     } else if (userdata.response.get(i).type == 2) {
                         item.put("statetype", "我响应的，求救");
                         item.put("statename", userdata.response.get(i).title);

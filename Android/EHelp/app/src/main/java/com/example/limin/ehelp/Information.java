@@ -45,8 +45,8 @@ public class Information extends AppCompatActivity {
     private ImageView icon;
     private ApiService apiService;
     private UserInfoBean userInfoBean;
-    private TextView name;
-    private TextView gender;
+    private EditText name;
+    private EditText gender;
 
 
     @Override
@@ -67,7 +67,7 @@ public class Information extends AppCompatActivity {
             }
         });
 
-        RandomNG();
+        //RandomNG();
 
     }
 
@@ -97,7 +97,7 @@ public class Information extends AppCompatActivity {
         });
     }
 
-    private void RandomNG() {
+    /*private void RandomNG() {
         name = (TextView)findViewById(R.id.name);
         gender = (TextView)findViewById(R.id.gender);
         float a = (float)(Math.random()*100);
@@ -114,7 +114,8 @@ public class Information extends AppCompatActivity {
             name.setText("李为");
             gender.setText("男");
         }
-    }
+    }*/
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -138,6 +139,8 @@ public class Information extends AppCompatActivity {
         username = (TextView) findViewById(R.id.username);
         phone = (TextView) findViewById(R.id.phone);
         next = (TextView) findViewById(R.id.tv_nextope);
+        name = (EditText) findViewById(R.id.name);
+        gender = (EditText) findViewById(R.id.gender);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,16 +150,16 @@ public class Information extends AppCompatActivity {
         });
 
         title.setText("个人信息");
-        next.setText("");
-        /*next.setOnClickListener(new View.OnClickListener() {
+        next.setText("保存");
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String un = username.getText().toString();
-                String ph = phone.getText().toString();
+                String na = name.getText().toString();
+                String gd = gender.getText().toString();
                 //这里需要将个人信息数据传入数据库
                 Toast.makeText(Information.this, "修改个人信息成功!", Toast.LENGTH_SHORT).show();
                 finish();
             }
-        });*/
+        });
     }
 }
