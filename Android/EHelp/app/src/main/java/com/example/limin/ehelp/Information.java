@@ -89,6 +89,8 @@ public class Information extends AppCompatActivity {
                 userInfoBean = response.body().data;
                 username.setText(userInfoBean.username);
                 phone.setText(userInfoBean.phone);
+                //gender.setText(userInfoBean.gender);
+                //name.setText(userInfoBean.name);
             }
             @Override
             public void onFailure(Call<UserInfoResult> call, Throwable t) {

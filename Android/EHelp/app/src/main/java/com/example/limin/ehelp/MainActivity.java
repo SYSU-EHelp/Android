@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(MainActivity.this, ToastUtils.LOGIN_SUCCESS + response
                         .body().data.id, Toast.LENGTH_SHORT).show();
+                CurrentUser.id = response.body().data.id;
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);
                 finish();
