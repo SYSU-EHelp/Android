@@ -1,70 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
+    android:fillViewport="true"
+    android:id="@+id/scrolllayout"
     tools:context="com.example.limin.ehelp.MainActivity">
 
-    <ImageView
-        android:contentDescription = "@string/app_name"
-        style="@style/image_style"
-        android:src="@drawable/logo" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TableLayout style="@style/tableLayout">
-        <TableRow style="@style/tablerow">
-            <TextView
-                style="@style/text_style"
-                android:text="账号"
-                android:textSize="@dimen/textSize"
-                android:layout_marginRight="20dp"/>
-            <EditText
-                android:id="@+id/username"
-                style="@style/input_box"
-                android:layout_width="@dimen/width"
-                android:layout_weight="1"
-                android:hint="手机号/用户名"
-                android:textSize="@dimen/textSize" />
-        </TableRow>
+        <ImageView
+            android:id="@+id/imageView"
+            style="@style/image_style"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/logo_big" />
 
-        <TableRow style="@style/tablerow">
-            <TextView
-                style="@style/text_style"
-                android:text="密码"
-                android:textSize="@dimen/textSize"
-                android:layout_marginRight="20dp"/>
-            <EditText
-                android:id="@+id/password"
-                style="@style/input_box"
-                android:layout_width="@dimen/width"
-                android:layout_weight="1"
-                android:hint="请输入密码"
-                android:inputType="textPassword"
-                android:textSize="@dimen/textSize" />
-        </TableRow>
-    </TableLayout>
+        <TableLayout
+            android:id="@+id/tablelayout"
+            style="@style/tableLayout">
 
-    <Button
-        android:id="@+id/loginButton"
-        style="@style/button"
-        android:background="@drawable/button"
-        android:text="登录" />
+            <TableRow style="@style/tablerow">
 
-    <TextView
-        android:id="@+id/register"
-        style="@style/text_style"
-        android:text="立即注册"
-        android:textSize="@dimen/textSize"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="15dp"/>
+                <TextView
+                    style="@style/text_style"
+                    android:layout_marginRight="20dp"
+                    android:text="账号"
+                    android:textSize="@dimen/textSize" />
 
-    <Button
-        android:id="@+id/apiTest"
-        style="@style/button"
-        android:background="@drawable/button"
-        android:text="api测试" />
-</LinearLayout>
+                <EditText
+                    android:id="@+id/username"
+                    style="@style/input_box"
+                    android:layout_width="@dimen/width"
+                    android:layout_weight="1"
+                    android:hint="手机号/用户名"
+                    android:maxLines="1"
+                    android:textSize="@dimen/textSize" />
+            </TableRow>
+
+            <TableRow style="@style/tablerow">
+
+                <TextView
+                    style="@style/text_style"
+                    android:layout_marginRight="20dp"
+                    android:text="密码"
+                    android:textSize="@dimen/textSize" />
+
+                <EditText
+                    android:id="@+id/password"
+                    style="@style/input_box"
+                    android:layout_width="@dimen/width"
+                    android:layout_weight="1"
+                    android:hint="请输入密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textSize="@dimen/textSize" />
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/loginButton"
+            style="@style/button"
+            android:background="@drawable/button"
+            android:text="登录"
+            android:textSize="@dimen/mainTextSize" />
+
+        <TextView
+            android:id="@+id/register"
+            style="@style/text_style"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="13dp"
+            android:text="立即注册"
+            android:textSize="@dimen/mainTextSize" />
+
+        <!--<Button-->
+        <!--android:id="@+id/apiTest"-->
+        <!--style="@style/button"-->
+        <!--android:background="@drawable/button"-->
+        <!--android:text="api测试" />-->
+    </LinearLayout>
+</ScrollView>

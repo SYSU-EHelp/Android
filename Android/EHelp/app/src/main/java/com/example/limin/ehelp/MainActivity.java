@@ -2,11 +2,16 @@ package com.example.limin.ehelp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +29,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ScrollView scrolllayout;
+    private TableLayout tablelayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +43,33 @@ public class MainActivity extends AppCompatActivity {
         final EditText username = (EditText)findViewById(R.id.username);
         final EditText password = (EditText)findViewById(R.id.password);
         final TextView register = (TextView)findViewById(R.id.register);
+        scrolllayout = (ScrollView) findViewById(R.id.scrolllayout);
+        tablelayout = (TableLayout) findViewById(R.id.tablelayout);
 
+        // 不允许输入换行
+        username.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
+
+
+//        username.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                changeScrollView();
+//                return false;
+//            }
+//        });
+
+//        password.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                changeScrollView();
+//                return false;
+//            }
+//        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         //  先进行cookit 注入
         String cookit = getSharedPreferences("login_info", MODE_PRIVATE).getString("cookit", "");
         if (cookit == "") {
-            ToastUtils.show(MainActivity.this, "你还未来曾经登录");
+            //ToastUtils.show(MainActivity.this, "你还未来曾经登录");
             return;
         }
         CurrentUser.cookie = cookit;
@@ -115,14 +148,24 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // -------------测试部分--------------
-        Button apiTest = (Button) findViewById(R.id.apiTest);
-        apiTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,APITestActivity.class);
-                startActivity(intent);
-            }
-        });
+//        // -------------测试部分--------------
+//        Button apiTest = (Button) findViewById(R.id.apiTest);
+//        apiTest.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this,APITestActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
+
+    private void changeScrollView(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrolllayout.scrollTo(0, scrolllayout.getHeight());
+            }
+        }, 100);
+    }
+
 }
