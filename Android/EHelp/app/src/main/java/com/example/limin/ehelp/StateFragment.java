@@ -141,10 +141,11 @@ public class StateFragment extends Fragment {
                         startActivity(intent);
                     } else if (userdata.launch.get(position).type == 2) {
                         //Toast.makeText(getContext(), "您的紧急求救信息已经发送！", Toast.LENGTH_SHORT).show();
-
+                        //Toast.makeText(getContext(), userdata.launch.get(position).finished+"", Toast.LENGTH_SHORT).show();
                         if (userdata.launch.get(position).finished == 0) {
                             Intent intent = new Intent(getContext(), EmergencyHelpFinish.class);
                             intent.putExtra("event_id", userdata.launch.get(position).id);
+                            startActivity(intent);
                         } else {
                             new AlertDialog.Builder(getContext()).setTitle("求救事件已结束").setMessage("求救短信已发送给您的紧急联系人\n求救时间：" + userdata.launch.get(position).date)
                                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
