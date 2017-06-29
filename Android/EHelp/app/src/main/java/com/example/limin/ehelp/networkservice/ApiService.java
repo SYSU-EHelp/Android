@@ -110,7 +110,10 @@ public interface ApiService {
     Call<ResponseDetailResult> requestResponseDetail(@Path("help_id") int help_id);
 
     @POST("/api/emergencies")
-    Call<EmptyResult> requestEmergency();
+    Call<HelpIdResult> requestEmergency();
+
+    @PATCH("/api/emergencies")
+    Call<EmptyResult> requestEmergencyFinish(@Query("id") int id);
 
     @GET("/api/users/{user_id}")
     Call<UserResult> requestUser(@Path("user_id") int user_id);

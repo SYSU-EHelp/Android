@@ -119,7 +119,7 @@ public class HelpStateActivity extends AppCompatActivity {
                                     ToastUtils.show(HelpStateActivity.this, response.body().errmsg);
                                     return;
                                 }
-                                ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
+                                //ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
                             }
                             @Override
                             public void onFailure(Call<EmptyResult> call, Throwable t) {
@@ -185,7 +185,7 @@ public class HelpStateActivity extends AppCompatActivity {
                     ToastUtils.show(HelpStateActivity.this, response.body().errmsg);
                     return;
                 }
-                ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
+                //ToastUtils.show(HelpStateActivity.this, new Gson().toJson(response.body()));
                 ResponseDetailBean responseDetailBean = response.body().data;
                 ArrayList<HashMap<String, Object>> responsers = responseDetailBean.responser;
                 responserlist.clear();

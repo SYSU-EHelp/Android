@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/itemclickselector"
-              android:orientation="vertical"
-              android:padding="15dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/itemclickselector"
+    android:orientation="vertical"
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/questiontitle"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textColor="@android:color/black"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/questioncontent"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
-        android:background="@color/mLightGray" />
+        android:background="@color/grayBackground" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,16 +72,16 @@
             android:layout_width="1px"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:background="@color/mGray"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:background="@color/mGray" />
 
         <TextView
             android:id="@+id/anwserquestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="#1abc9c"/>
+            android:textColor="#1abc9c" />
 
     </LinearLayout>
 </LinearLayout>

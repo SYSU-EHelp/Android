@@ -13,8 +13,10 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.example.limin.ehelp.bean.HelpIdBean;
 import com.example.limin.ehelp.networkservice.ApiService;
 import com.example.limin.ehelp.networkservice.EmptyResult;
+import com.example.limin.ehelp.networkservice.HelpIdResult;
 import com.example.limin.ehelp.utility.ToastUtils;
 
 import retrofit2.Call;
@@ -39,6 +41,8 @@ public class EmergencyHelp extends AppCompatActivity{
     //private Location curLoc = null;
     private String curLocStr = "";
 
+    // 求救事件ID
+    private int help_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +62,8 @@ public class EmergencyHelp extends AppCompatActivity{
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmergencyHelp.this, HomeActivity.class);
-                startActivity(intent);
+                timer.cancel();
+                finish();
             }
         });
     }
@@ -76,10 +80,10 @@ public class EmergencyHelp extends AppCompatActivity{
             tv_helpernum.setEnabled(true);
             tv_helpernum.setText("0");
 
-            Call<EmptyResult> call = apiService.requestEmergency();
-            call.enqueue(new Callback<EmptyResult>() {
+            Call<HelpIdResult> call = apiService.requestEmergency();
+            call.enqueue(new Callback<HelpIdResult>() {
                 @Override
-                public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+                public void onResponse(Call<HelpIdResult> call, Response<HelpIdResult> response) {
 
                     if (!response.isSuccessful()) {
                         ToastUtils.show(EmergencyHelp.this, ToastUtils.SERVER_ERROR);
@@ -89,18 +93,26 @@ public class EmergencyHelp extends AppCompatActivity{
                         ToastUtils.show(EmergencyHelp.this, response.body().errmsg);
                         return;
                     }
+
                     //ToastUtils.show(EmergencyHelp.this, new Gson().toJson(response.body()));
                     //Toast.makeText(EmergencyHelp.this, curLocStr, Toast.LENGTH_SHORT).show();
+                    HelpIdBean helpIdBean = response.body().data;
+                    help_id = helpIdBean.id;
+                    Toast.makeText(EmergencyHelp.this, help_id+"", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EmergencyHelp.this, EmergencyHelpFinish.class);
+                    intent.putExtra("event_id", help_id);
+                    startActivity(intent);
+                    finish();
                 }
                 @Override
-                public void onFailure(Call<EmptyResult> call, Throwable t) {
+                public void onFailure(Call<HelpIdResult> call, Throwable t) {
                     ToastUtils.show(EmergencyHelp.this, t.toString());
                 }
             });
-            exit.setText("已经发送紧急求救信息");
-            exit.setBackgroundColor(getResources().getColor(R.color.mGray));
-            exit.setClickable(false);
-            hint_code.setText("我们已经向您的紧急联系人发送预先编辑好的求救信息！");
+//            exit.setText("已经发送紧急求救信息");
+//            exit.setBackgroundColor(getResources().getColor(R.color.mGray));
+//            exit.setClickable(false);
+//            hint_code.setText("我们已经向您的紧急联系人发送预先编辑好的求救信息！");
 
         }
     };

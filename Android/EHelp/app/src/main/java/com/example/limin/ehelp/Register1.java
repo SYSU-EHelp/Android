@@ -40,6 +40,11 @@ public class Register1 extends AppCompatActivity {
                     return;
                 }
 
+                if (phone.getText().toString().length() != 11) {
+                    Toast.makeText(getApplicationContext(),"请输入11位有效手机号！",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 SimpleRequest.getInstance().sendCode(phone.getText().toString().trim(), new ApiServiceRequestResultHandler() {
                     @Override
                     public void onSuccess(Object dataBean) {

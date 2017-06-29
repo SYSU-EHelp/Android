@@ -85,10 +85,14 @@
             android:name=".networkservice.APITestActivity"
             android:launchMode="singleTask"
             android:label="@string/title_activity_apitest"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
         <activity android:name=".EmergencyHelp"
             android:launchMode="singleTask"/>
+
+        <activity android:name=".EmergencyHelpFinish"
+            android:launchMode="singleTask"/>
+
     </application>
 
 </manifest>

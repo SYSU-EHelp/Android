@@ -154,7 +154,7 @@ public class Information extends AppCompatActivity {
                     ToastUtils.show(Information.this, response.body().errmsg);
                     return;
                 }
-                ToastUtils.show(Information.this, new Gson().toJson(response.body()));
+                //ToastUtils.show(Information.this, new Gson().toJson(response.body()));
                 userInfoBean = response.body().data;
                 username.setText(userInfoBean.username);
                 phone.setText(userInfoBean.phone);
