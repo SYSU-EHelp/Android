@@ -78,6 +78,11 @@ public interface ApiService {
     Call<EmptyResult> requestAnswerQuestion(@Path("question_id") int question_id,
                                             @Query("answer") String answer);
 
+    @PATCH("/api/users/{user_id}/information")
+    Call<EmptyResult> requestEditInformation(@Path("user_id") int user_id,
+                                             @Query("name") String name,
+                                             @Query("sex") String sex);
+
     @GET("/api/helps")
     Call<HelpsResult> requestHelps();
 

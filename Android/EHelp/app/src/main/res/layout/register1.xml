@@ -7,40 +7,42 @@
 
     <EditText
         android:id="@+id/phone"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:hint="手机号"
-        android:textSize="@dimen/textSize"
-        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:hint="手机号"
+        android:textSize="@dimen/textSize" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp">
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
         <EditText
             android:id="@+id/verified"
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
             android:hint="短信验证码"
-            android:layout_marginRight="30dp"
-            android:textSize="@dimen/textSize"
-           >
-        </EditText>
+            android:layout_weight="3"
+            android:textSize="@dimen/textSize"/>
+
         <TextView
             android:id="@+id/send_verified"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="获取验证码"
-            android:textColor="#1abc9c"/>
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="#1abc9c"
+            android:layout_marginLeft="10dp"
+            />
     </LinearLayout>
-
-
 
 
 </LinearLayout>

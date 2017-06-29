@@ -105,20 +105,20 @@ public class StateFragment extends Fragment {
                             public void onResponse(Call<UserInfoResult> call, Response<UserInfoResult> response) {
 
                                 if (!response.isSuccessful()) {
-                                    ToastUtils.show(getContext(), ToastUtils.SERVER_ERROR);
+                                    //ToastUtils.show(getContext(), ToastUtils.SERVER_ERROR);
                                     return;
                                 }
                                 if (response.body().status != 200) {
-                                    ToastUtils.show(getContext(), response.body().errmsg);
+                                    //ToastUtils.show(getContext(), response.body().errmsg);
                                     return;
                                 }
-                                ToastUtils.show(getContext(), new Gson().toJson(response.body()));
+                                //ToastUtils.show(getContext(), new Gson().toJson(response.body()));
                                 userInfoBean = response.body().data;
                                 username = userInfoBean.username.toString();
                             }
                             @Override
                             public void onFailure(Call<UserInfoResult> call, Throwable t) {
-                                ToastUtils.show(getContext(), t.toString());
+                                //ToastUtils.show(getContext(), t.toString());
                             }
                         });
                         bundle.putString("questionname", username);
@@ -213,14 +213,14 @@ public class StateFragment extends Fragment {
             public void onResponse(Call<UserResult> call, Response<UserResult> response) {
 
                 if (!response.isSuccessful()) {
-                    ToastUtils.show(getContext(), ToastUtils.SERVER_ERROR);
+                    //Utils.show(getContext(), ToastUtils.SERVER_ERROR);
                     return;
                 }
                 if (response.body().status != 200) {
-                    ToastUtils.show(getContext(), response.body().errmsg);
+                    //ToastUtils.show(getContext(), response.body().errmsg);
                     return;
                 }
-                ToastUtils.show(getContext(), new Gson().toJson(response.body()));
+                //ToastUtils.show(getContext(), new Gson().toJson(response.body()));
                 userdata = response.body().data;
 
                 //清空列表
@@ -296,7 +296,7 @@ public class StateFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<UserResult> call, Throwable t) {
-                ToastUtils.show(getContext(), t.toString());
+                //ToastUtils.show(getContext(), t.toString());
             }
         });
     }

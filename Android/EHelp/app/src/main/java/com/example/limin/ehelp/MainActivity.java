@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onError(Object errorMessage) {
-                                ToastUtils.show(MainActivity.this,(String) errorMessage);
+                                //ToastUtils.show(MainActivity.this,(String) errorMessage);
                             }
                         });
 
@@ -127,15 +127,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
                 if (!response.isSuccessful()) {
-                    ToastUtils.show(MainActivity.this, ToastUtils.SERVER_ERROR);
+                    //ToastUtils.show(MainActivity.this, ToastUtils.SERVER_ERROR);
                     return;
                 }
                 if (response.body().status != 200) {
-                    ToastUtils.show(MainActivity.this, response.body().errmsg);
+                    //ToastUtils.show(MainActivity.this, response.body().errmsg);
                     return;
                 }
-                Toast.makeText(MainActivity.this, ToastUtils.LOGIN_SUCCESS + response
-                        .body().data.id, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, ToastUtils.LOGIN_SUCCESS + response.body().data.id, Toast.LENGTH_SHORT).show();
                 CurrentUser.id = response.body().data.id;
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);
