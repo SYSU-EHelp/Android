@@ -7,4 +7,6 @@ package com.example.limin.ehelp.bean;
 public class UserInfoBean {
     public String username;
     public String phone;
+    public String name;
+    public String sex;
 }

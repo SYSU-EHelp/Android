@@ -56,8 +56,8 @@ public class Information extends AppCompatActivity {
         apiService = ApiService.retrofit.create(ApiService.class);
         setTitle();
         getData();
-        icon = (ImageView)findViewById(R.id.icon);
-        icon.setOnClickListener(new View.OnClickListener() {
+        //icon = (ImageView)findViewById(R.id.icon);
+        /*icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -65,7 +65,7 @@ public class Information extends AppCompatActivity {
                 intent.setType("image:/*");
                 startActivityForResult(intent,1);
             }
-        });
+        });*/
 
         //RandomNG();
 
@@ -89,8 +89,8 @@ public class Information extends AppCompatActivity {
                 userInfoBean = response.body().data;
                 username.setText(userInfoBean.username);
                 phone.setText(userInfoBean.phone);
-                //gender.setText(userInfoBean.gender);
-                //name.setText(userInfoBean.name);
+                gender.setText(userInfoBean.sex);
+                name.setText(userInfoBean.name);
             }
             @Override
             public void onFailure(Call<UserInfoResult> call, Throwable t) {

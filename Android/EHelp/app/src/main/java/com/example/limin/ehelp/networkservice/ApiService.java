@@ -114,6 +114,8 @@ public interface ApiService {
     Call<UserInfoResult> requestUserInfo(@Path("user_id") int user_id);
 
 
+
+
     static final Interceptor interceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
