@@ -75,6 +75,7 @@ public class StateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.activity_statelist, container, false);
+        lv = (ListView)root.findViewById(R.id.statelist);
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
         refreshlayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshlayout);
@@ -87,7 +88,6 @@ public class StateFragment extends Fragment {
         refreshlayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        lv = (ListView)root.findViewById(R.id.statelist);
         adapter = new SimpleAdapter(getContext(),userListData,R.layout.layout_stateitem,
                 new String[] {"statename", "statetype", "statetime", "stateanswer"}, new int[] {R.id.state_name,
                 R.id.state_type, R.id.state_time, R.id.state_answer});
@@ -215,6 +215,11 @@ public class StateFragment extends Fragment {
 
 
         return root;
+    }
+
+    public void onResume() {
+        getData();
+        super.onResume();
     }
 
     private void changeColor() {
