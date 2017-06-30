@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="张三" />
+                    android:text="" />
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="2天前"
+                    android:text=""
                     android:textColor="@color/mGray"
                     android:textSize="@dimen/mainTextSize"/>
             </LinearLayout>
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="~"
+                android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -77,16 +77,16 @@
                 android:paddingBottom="15dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="~"
+                android:text=""
                 android:textColor="@color/mGray"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/mLightGray" />
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:background="@color/mLightGray" />-->
 
             <TextView
                 android:id="@+id/questiondetailcount"
@@ -95,17 +95,15 @@
                 android:lineSpacingExtra="3dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
-                android:text="2人回答"
+                android:text=""
                 android:textColor="@color/mGray"
                 android:textSize="14sp" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_height="5dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/mLightGray" />
+                android:background="@color/grayBackground" />
 
             <com.example.limin.ehelp.MyListView
                 android:id="@+id/anwserslist"

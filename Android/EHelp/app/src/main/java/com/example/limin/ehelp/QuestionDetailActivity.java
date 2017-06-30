@@ -191,7 +191,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 questionDetailData = response.body().data;
 
                 questionDetailListData.clear();
-                questiondetailcount.setText(questionDetailData.size() - 1 + "人已回答");
+                questiondetailcount.setText(questionDetailData.size() - 1 + "人回答");
 
                 questiontitle = questionDetailData.get(0).title;
                 questioncontent = questionDetailData.get(0).description;

@@ -49,8 +49,6 @@ public class EmergencyContact extends AppCompatActivity {
     private List<ContactBean> contactBeen = new ArrayList<>();
     private SimpleAdapter simpleAdapter;
 
-
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +77,29 @@ public class EmergencyContact extends AppCompatActivity {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                contact.remove(position);
-                                simpleAdapter.notifyDataSetChanged();
+                                Call<EmptyResult> call = apiService.requestDeleteContact((String) contact.get(position).get("username"));
+                                call.enqueue(new Callback<EmptyResult>() {
+                                    @Override
+                                    public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
+
+                                        if (!response.isSuccessful()) {
+                                            //ToastUtils.show(EmergencyContact.this, ToastUtils.SERVER_ERROR);
+                                            return;
+                                        }
+                                        if (response.body().status != 200) {
+                                            //ToastUtils.show(EmergencyContact.this, response.body().errmsg);
+                                            return;
+                                        }
+                                        Toast.makeText(EmergencyContact.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                        contact.remove(position);
+                                        simpleAdapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<EmptyResult> call, Throwable t) {
+                                        //ToastUtils.show(EmergencyContact.this, t.toString());
+                                    }
+                                });
 
                             }
                         }).setNegativeButton("取消",null).show();
@@ -127,14 +146,14 @@ public class EmergencyContact extends AppCompatActivity {
                                     public void onResponse(Call<EmptyResult> call, Response<EmptyResult> response) {
 
                                         if (!response.isSuccessful()) {
-                                            ToastUtils.show(EmergencyContact.this, ToastUtils.SERVER_ERROR);
+                                            //ToastUtils.show(EmergencyContact.this, ToastUtils.SERVER_ERROR);
                                             return;
                                         }
                                         if (response.body().status != 200) {
-                                            ToastUtils.show(EmergencyContact.this, response.body().errmsg);
+                                            //ToastUtils.show(EmergencyContact.this, response.body().errmsg);
                                             return;
                                         }
-                                        ToastUtils.show(EmergencyContact.this, new Gson().toJson(response.body()));
+                                        //ToastUtils.show(EmergencyContact.this, new Gson().toJson(response.body()));
                                         SharedPreferences sharedPreferences = getSharedPreferences("econtact", MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString("username", add_name);
@@ -144,7 +163,7 @@ public class EmergencyContact extends AppCompatActivity {
                                     }
                                     @Override
                                     public void onFailure(Call<EmptyResult> call, Throwable t) {
-                                        ToastUtils.show(EmergencyContact.this, t.toString());
+                                        //ToastUtils.show(EmergencyContact.this, t.toString());
                                     }
                                 });
                                 Toast.makeText(getApplicationContext(),"添加联系人成功",Toast.LENGTH_SHORT).show();
@@ -158,7 +177,7 @@ public class EmergencyContact extends AppCompatActivity {
     }
 
     private void getData() {
-        ToastUtils.show(EmergencyContact.this, CurrentUser.cookie);
+        //ToastUtils.show(EmergencyContact.this, CurrentUser.cookie);
 
         Call<ContactsResult> call = apiService.requestContacts();
         call.enqueue(new Callback<ContactsResult>() {
@@ -166,14 +185,14 @@ public class EmergencyContact extends AppCompatActivity {
             public void onResponse(Call<ContactsResult> call, Response<ContactsResult> response) {
 
                 if (!response.isSuccessful()) {
-                    ToastUtils.show(EmergencyContact.this, ToastUtils.SERVER_ERROR);
+                    //ToastUtils.show(EmergencyContact.this, ToastUtils.SERVER_ERROR);
                     return;
                 }
                 if (response.body().status != 200) {
-                    ToastUtils.show(EmergencyContact.this, response.body().errmsg);
+                    //ToastUtils.show(EmergencyContact.this, response.body().errmsg);
                     return;
                 }
-                ToastUtils.show(EmergencyContact.this, new Gson().toJson(response.body()));
+                //ToastUtils.show(EmergencyContact.this, new Gson().toJson(response.body()));
                 contactBeen.clear();
                 contactBeen = response.body().data;
                 contact.clear();
@@ -188,7 +207,7 @@ public class EmergencyContact extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ContactsResult> call, Throwable t) {
-                ToastUtils.show(EmergencyContact.this, t.toString());
+                //Utils.show(EmergencyContact.this, t.toString());
             }
         });
 

@@ -87,6 +87,7 @@ public class Information extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final EditText et = new EditText(Information.this);
+                et.setText(mName);
                 new AlertDialog.Builder(Information.this).setTitle("请编辑您的姓名")
                         .setView(et)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {

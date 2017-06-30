@@ -57,6 +57,9 @@ public interface ApiService {
     @GET("/api/users/contacts")
     Call<ContactsResult> requestContacts();
 
+    @PATCH("/api/users/contacts")
+    Call<EmptyResult> requestDeleteContact(@Query("username") String username);
+
     @POST("/api/users/contacts")
     @FormUrlEncoded
     Call<EmptyResult> requestAddContact(@Field("username") String username,

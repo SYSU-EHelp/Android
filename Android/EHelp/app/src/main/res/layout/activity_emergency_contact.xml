@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:textSize="16dp"
-        android:text="我们会在您使用求助功能时,立即将预先编辑好的模板短信发送给你的紧急联系人"/>
+        android:text="我们会在您使用紧急求救功能时，立即将屏幕下方的模板短信发送给您的紧急联系人"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
         android:textSize="17dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:hint="我是XX,现在我遇到了紧急情况,用易助发送了一个紧急求救,请尽快联系我,谢谢!"
+        android:hint="我是XX，现在我遇到了紧急情况，用易助发送了一个紧急求救，请尽快联系我，谢谢!"
         android:scrollbars="vertical"
         android:background="@android:drawable/edit_text"
         >
