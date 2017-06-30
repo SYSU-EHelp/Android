@@ -63,7 +63,7 @@ public class StateFragment extends Fragment {
                 case REFRESH_COMPLETE:
                     getData();
                     adapter.notifyDataSetChanged();
-                    changeColor();
+                    //changeColor();
                     refreshlayout.setRefreshing(false);
                     break;
             }
@@ -222,7 +222,7 @@ public class StateFragment extends Fragment {
         super.onResume();
     }
 
-    private void changeColor() {
+    /*private void changeColor() {
         for (int i = 0; i < userListData.size(); i++) {
             if (userListData.get(i).get("finish").toString().equals("1")) {
                 LinearLayout it = (LinearLayout)lv.getChildAt(i);
@@ -230,7 +230,7 @@ public class StateFragment extends Fragment {
                 tv.setTextColor(getResources().getColor(R.color.mGray));
             }
         }
-    }
+    }*/
 
     private void getData() {
         Call<UserResult> call = apiService.requestUser(CurrentUser.id);
