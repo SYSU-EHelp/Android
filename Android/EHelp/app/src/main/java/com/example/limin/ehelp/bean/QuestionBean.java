@@ -11,4 +11,5 @@ public class QuestionBean {
     public String date;
     public String asker_username;
     public String asker_avatar;
+    public int answer_num;
 }

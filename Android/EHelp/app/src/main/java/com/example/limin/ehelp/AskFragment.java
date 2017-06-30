@@ -157,7 +157,7 @@ public class AskFragment extends Fragment {
                     item.put("questiontitle", questionData.get(i).title);
                     item.put("questioncontent", questionData.get(i).description);
                     item.put("questionname", questionData.get(i).asker_username);
-                    item.put("anwserdate", questionData.get(i).date);
+                    item.put("anwserdate", questionData.get(i).answer_num + "人回答");
                     item.put("anwserquestion", "查看");
                     questionListData.add(item);
                 }

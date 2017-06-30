@@ -185,7 +185,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<EmptyResult> call, Throwable t) {
-                    Toast.makeText(HomeActivity.this, "退出失败？？", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "退出登录失败，请检查网络", Toast.LENGTH_SHORT).show();
                 }
             });
             return true;
