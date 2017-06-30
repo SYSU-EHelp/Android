@@ -135,11 +135,6 @@ public class EmergencyContact extends AppCompatActivity {
                                         return;
                                     }
                                 }
-                                Map<String, Object> temp2 = new LinkedHashMap<>();
-                                temp2.put("username", add_name);
-                                temp2.put("phone", add_phone);
-                                contact.add(temp2);
-                                simpleAdapter.notifyDataSetChanged();
                                 Call<EmptyResult> call = apiService.requestAddContact(add_name, add_phone);
                                 call.enqueue(new Callback<EmptyResult>() {
                                     @Override
@@ -159,6 +154,11 @@ public class EmergencyContact extends AppCompatActivity {
                                         editor.putString("username", add_name);
                                         editor.putString("phone", add_phone);
                                         editor.commit();
+                                        Map<String, Object> temp2 = new LinkedHashMap<>();
+                                        temp2.put("username", add_name);
+                                        temp2.put("phone", add_phone);
+                                        contact.add(temp2);
+                                        simpleAdapter.notifyDataSetChanged();
 
                                     }
                                     @Override

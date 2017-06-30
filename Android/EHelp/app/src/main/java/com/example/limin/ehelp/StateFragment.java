@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.limin.ehelp.bean.HelpBean;
@@ -51,8 +53,8 @@ public class StateFragment extends Fragment {
     private SwipeRefreshLayout refreshlayout;
     private static final int REFRESH_COMPLETE = 0X110;
 
-    private List<UserBean.Launch> launch = new ArrayList<>();
-    private List<UserBean.Response> response = new ArrayList<>();
+    private List<UserBean.Launch> Launch = new ArrayList<>();
+    private List<UserBean.Response> Response = new ArrayList<>();
     private List<Map<String, Object>> userListData = new ArrayList<Map<String, Object>>();
 
     private Handler mHandler = new Handler() {
@@ -61,6 +63,7 @@ public class StateFragment extends Fragment {
                 case REFRESH_COMPLETE:
                     getData();
                     adapter.notifyDataSetChanged();
+                    changeColor();
                     refreshlayout.setRefreshing(false);
                     break;
             }
@@ -74,7 +77,6 @@ public class StateFragment extends Fragment {
         View root = inflater.inflate(R.layout.activity_statelist, container, false);
         apiService = ApiService.retrofit.create(ApiService.class);
         getData();
-
         refreshlayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshlayout);
         refreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -89,6 +91,7 @@ public class StateFragment extends Fragment {
         adapter = new SimpleAdapter(getContext(),userListData,R.layout.layout_stateitem,
                 new String[] {"statename", "statetype", "statetime", "stateanswer"}, new int[] {R.id.state_name,
                 R.id.state_type, R.id.state_time, R.id.state_answer});
+
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -210,7 +213,18 @@ public class StateFragment extends Fragment {
             }
         });
 
+
         return root;
+    }
+
+    private void changeColor() {
+        for (int i = 0; i < userListData.size(); i++) {
+            if (userListData.get(i).get("finish").toString().equals("1")) {
+                LinearLayout it = (LinearLayout)lv.getChildAt(i);
+                TextView tv = (TextView)it.findViewById(R.id.state_answer);
+                tv.setTextColor(getResources().getColor(R.color.mGray));
+            }
+        }
     }
 
     private void getData() {
@@ -229,6 +243,8 @@ public class StateFragment extends Fragment {
                 }
                 //ToastUtils.show(getContext(), new Gson().toJson(response.body()));
                 userdata = response.body().data;
+                Launch = userdata.launch;
+                Response = userdata.response;
 
                 //清空列表
                 userListData.clear();
@@ -241,6 +257,7 @@ public class StateFragment extends Fragment {
                         item.put("statename", userdata.launch.get(i).title);
                         item.put("statetime", userdata.launch.get(i).date);
                         item.put("stateanswer", userdata.launch.get(i).num+"人回答");
+                        item.put("finish", "0");
                         userListData.add(item);
                     } else if (userdata.launch.get(i).type == 1) {
                         if (userdata.launch.get(i).finished == 0) {
@@ -248,21 +265,33 @@ public class StateFragment extends Fragment {
                             item.put("statename", userdata.launch.get(i).title);
                             item.put("statetime", userdata.launch.get(i).date);
                             item.put("stateanswer", userdata.launch.get(i).num+"人响应");
+                            item.put("finish", "0");
                             userListData.add(item);
-                        } else {
+                        } else if (userdata.launch.get(i).finished == 1){
                             item.put("statetype", "我发起的，求助");
                             item.put("statename", userdata.launch.get(i).title);
                             item.put("statetime", userdata.launch.get(i).date);
                             item.put("stateanswer", "求助事件已经结束");
+                            item.put("finish", "1");
                             userListData.add(item);
                         }
 
                     } else if (userdata.launch.get(i).type == 2) {
-                        item.put("statetype", "我发起的，求救");
-                        item.put("statename", userdata.launch.get(i).title);
-                        item.put("statetime", userdata.launch.get(i).date);
-                        item.put("stateanswer", "您的紧急求救信息已经发送");
-                        userListData.add(item);
+                        if (userdata.launch.get(i).finished == 0) {
+                            item.put("statetype", "我发起的，求救");
+                            item.put("statename", userdata.launch.get(i).title);
+                            item.put("statetime", userdata.launch.get(i).date);
+                            item.put("stateanswer", "您的紧急求救信息已经发送");
+                            userListData.add(item);
+                            item.put("finish", "0");
+                        } else if (userdata.launch.get(i).finished == 1){
+                            item.put("statetype", "我发起的，求救");
+                            item.put("statename", userdata.launch.get(i).title);
+                            item.put("statetime", userdata.launch.get(i).date);
+                            item.put("stateanswer", "求救事件已经结束");
+                            userListData.add(item);
+                            item.put("finish", "1");
+                        }
                     }
                 }
                 //遍历响应列表
@@ -274,6 +303,8 @@ public class StateFragment extends Fragment {
                         item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
                         item.put("stateanswer", userdata.response.get(i).num+"人回答");
                         userListData.add(item);
+                        item.put("finish", "0");
+
                     } else if (userdata.response.get(i).type == 1) {
                         if (userdata.response.get(i).finished == 0) {
                             item.put("statetype", "我响应的，求助");
@@ -281,24 +312,22 @@ public class StateFragment extends Fragment {
                             item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
                             item.put("stateanswer", userdata.response.get(i).num+"人响应");
                             userListData.add(item);
-                        } else {
+                            item.put("finish", "0");
+
+                        } else if (userdata.response.get(i).finished == 1){
                             item.put("statetype", "我响应的，求助");
                             item.put("statename", userdata.response.get(i).title);
                             item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
                             item.put("stateanswer", "求助事件已经结束");
                             userListData.add(item);
-                        }
+                            item.put("finish", "1");
 
-                    } else if (userdata.response.get(i).type == 2) {
-                        item.put("statetype", "我响应的，求救");
-                        item.put("statename", userdata.response.get(i).title);
-                        item.put("statetime", "发起人:" + userdata.response.get(i).launcher_username);
-                        item.put("stateanswer", userdata.response.get(i).num+"人响应");
-                        userListData.add(item);
+                        }
                     }
                 }
 
                 adapter.notifyDataSetChanged();
+
 
             }
             @Override
