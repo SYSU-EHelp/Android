@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onError(Object errorMessage) {
                                 //ToastUtils.show(MainActivity.this,(String) errorMessage);
+                                Toast.makeText(MainActivity.this, "您输入的账号名或者密码有误", Toast.LENGTH_SHORT).show();
                             }
                         });
 

@@ -57,6 +57,7 @@ public class Register1 extends AppCompatActivity {
                     }
                 });
                 timer.start();
+                send_verified.setClickable(false);
             }
         });
 
@@ -67,6 +68,9 @@ public class Register1 extends AppCompatActivity {
                     Toast.makeText(Register1.this, "请输入您的手机号", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(verified.getText().toString())){
                     Toast.makeText(Register1.this, "请先输入您的手机验证码", Toast.LENGTH_SHORT).show();
+                } else if (phone.getText().toString().length() != 11) {
+                    Toast.makeText(getApplicationContext(),"请输入11位有效手机号！",Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
                     Intent intent = new Intent(Register1.this,Register2.class);
                     intent.putExtra("code", verified.getText().toString().trim());
@@ -89,6 +93,7 @@ public class Register1 extends AppCompatActivity {
         @Override
         public void onFinish() {
             send_verified.setEnabled(true);
+            send_verified.setClickable(true);
             send_verified.setText("获取验证码");
             send_verified.setTextColor(getResources().getColor(R.color.verified));
 
