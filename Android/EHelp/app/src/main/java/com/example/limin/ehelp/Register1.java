@@ -57,6 +57,7 @@ public class Register1 extends AppCompatActivity {
                     }
                 });
                 timer.start();
+                send_verified.setClickable(false);
             }
         });
 
@@ -89,6 +90,7 @@ public class Register1 extends AppCompatActivity {
         @Override
         public void onFinish() {
             send_verified.setEnabled(true);
+            send_verified.setClickable(true);
             send_verified.setText("获取验证码");
             send_verified.setTextColor(getResources().getColor(R.color.verified));
 

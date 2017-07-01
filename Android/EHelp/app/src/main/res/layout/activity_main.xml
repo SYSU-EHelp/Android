@@ -41,7 +41,7 @@
                     style="@style/input_box"
                     android:layout_width="@dimen/width"
                     android:layout_weight="1"
-                    android:hint="手机号/用户名"
+                    android:hint="用户名"
                     android:maxLines="1"
                     android:textSize="@dimen/textSize" />
             </TableRow>
