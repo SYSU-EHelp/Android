@@ -294,14 +294,14 @@ public class StateFragment extends Fragment {
                     } else if (userdata.launch.get(i).type == 2) {
                         if (userdata.launch.get(i).finished == 0) {
                             item.put("statetype", "我发起的，求救");
-                            item.put("statename", userdata.launch.get(i).title);
+                            item.put("statename", "紧急求救");
                             item.put("statetime", userdata.launch.get(i).date);
                             item.put("stateanswer", "您的紧急求救信息已经发送");
                             userListData.add(item);
                             item.put("finish", "0");
                         } else if (userdata.launch.get(i).finished == 1){
                             item.put("statetype", "我发起的，求救");
-                            item.put("statename", userdata.launch.get(i).title);
+                            item.put("statename", "紧急求救");
                             item.put("statetime", userdata.launch.get(i).date);
                             item.put("stateanswer", "求救事件已经结束");
                             userListData.add(item);
