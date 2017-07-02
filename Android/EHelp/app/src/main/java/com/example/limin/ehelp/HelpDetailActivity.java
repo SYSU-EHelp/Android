@@ -3,6 +3,7 @@ package com.example.limin.ehelp;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -90,12 +91,12 @@ public class HelpDetailActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 101;
 
     // 网络访问
-    private ApiService apiService;
+    private ApiService apiService = ApiService.retrofit.create(ApiService.class);
+    ;
 
     // 本地数据
     private int helpingEventID;
     private boolean canHelp;
-    private boolean isFinished = false;
 
     // 10秒检测一次求助是否结束
     private Handler handler = new Handler();
@@ -111,26 +112,32 @@ public class HelpDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_helpdetail);
 
-        apiService = ApiService.retrofit.create(ApiService.class);
-
+        // 更新正在响应的求助的状态
         SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
         helpingEventID = sp.getInt("id", -1);
         if (helpingEventID != -1) {
             updateHelpingState(helpingEventID);
         }
 
+        //初始化
         setTitle();
         findView();
-
-        //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         map.onCreate(savedInstanceState);
-        //初始化地图控制器对象
         if (aMap == null) {
             aMap = map.getMap();
         }
         mUiSettings = aMap.getUiSettings();//实例化UiSettings类对象
         mUiSettings.setZoomControlsEnabled(false);
 
+        // 网络访问
+        Bundle bundle = getIntent().getExtras();
+        id = bundle.getInt("id");
+        if (isEventFinished(id)) {  // 如果事件已结束则跳转至求助结束页面
+            Intent intent = new Intent(HelpDetailActivity.this, HelpFinishActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
+        }
         getDataAndInit();
 
         canHelp = (helpingEventID == -1) & (finished == 0);
@@ -194,9 +201,6 @@ public class HelpDetailActivity extends AppCompatActivity {
     }
 
     private void getDataAndInit() {
-        Bundle bundle = getIntent().getExtras();
-        id = bundle.getInt("id");
-
         Call<HelpDetailResult> call = apiService.requestHelpDetail(id);
         call.enqueue(new Callback<HelpDetailResult>() {
             @Override
@@ -226,6 +230,7 @@ public class HelpDetailActivity extends AppCompatActivity {
                 setView();
                 addMarker();
             }
+
             @Override
             public void onFailure(Call<HelpDetailResult> call, Throwable t) {
                 ToastUtils.show(HelpDetailActivity.this, t.toString());
@@ -304,33 +309,25 @@ public class HelpDetailActivity extends AppCompatActivity {
                     ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
                     return;
                 }
-                ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                //ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
                 HelpStatusBean helpStatus = response.body().data;
-                // 如果求助已结束，则更新UI
-                if (helpStatus.finished == 1 && !isFinished) {
-                    btn_gohelp.setClickable(false);
-                    btn_gohelp.setText("求助事件已结束");
-                    btn_gohelp.setBackgroundColor(R.color.mGray);
+                // 如果求助已结束，则跳转页面
+                if (helpStatus.finished == 1) {
                     // 清除本地存储的事件ID
-                    SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.remove("id");
-                    editor.commit();
+                    if (helpingEventID == id) {
+                        SharedPreferences sp = getSharedPreferences("helpingEventID", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.remove("id");
+                        editor.commit();
+                    }
 
-                    // 如果用户正在响应该事件，则弹出dialog提示
-                    AlertDialog.Builder builder = new AlertDialog.Builder(HelpDetailActivity.this);  //先得到构造器
-                    builder.setTitle("求助事件已结束"); //设置标题
-                    builder.setMessage("求助者已结束事件，非常感谢您的热心"); //设置内容
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    Intent intent = new Intent(HelpDetailActivity.this, HelpFinishActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", id);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    finish();
 
-                    builder.create().show();
-                    // 更新isFinished，保证只弹出一次弹框
-                    isFinished = true;
                 }
             }
 
@@ -365,7 +362,7 @@ public class HelpDetailActivity extends AppCompatActivity {
                     ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
                     return;
                 }
-                ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                //ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
                 HelpStatusBean helpStatus = response.body().data;
                 // 如果求助已结束，则更新UI
                 if (helpStatus.finished == 1) {
@@ -382,6 +379,40 @@ public class HelpDetailActivity extends AppCompatActivity {
                 ToastUtils.show(HelpDetailActivity.this, t.toString());
             }
         });
+    }
+
+    private boolean isEventFinished(int eventID) {
+        final boolean[] isFinished = {false};
+
+        //  获取求助的finish状态
+        Call<HelpStatusResult> call = apiService.requestHelpStatus(eventID);
+        call.enqueue(new Callback<HelpStatusResult>() {
+            @Override
+            public void onResponse(Call<HelpStatusResult> call, Response<HelpStatusResult> response) {
+
+                if (!response.isSuccessful()) {
+                    ToastUtils.show(HelpDetailActivity.this, ToastUtils.SERVER_ERROR);
+                    return;
+                }
+                if (response.body().status != 200) {
+                    ToastUtils.show(HelpDetailActivity.this, response.body().errmsg);
+                    return;
+                }
+                //ToastUtils.show(HelpDetailActivity.this, new Gson().toJson(response.body()));
+                HelpStatusBean helpStatus = response.body().data;
+
+                if (helpStatus.finished == 1) {
+                    isFinished[0] = true;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HelpStatusResult> call, Throwable t) {
+                ToastUtils.show(HelpDetailActivity.this, t.toString());
+            }
+        });
+
+        return isFinished[0];
     }
 
     @Override

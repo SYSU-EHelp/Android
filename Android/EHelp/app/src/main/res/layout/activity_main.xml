@@ -41,11 +41,7 @@
                     style="@style/input_box"
                     android:layout_width="@dimen/width"
                     android:layout_weight="1"
-<<<<<<< HEAD
                     android:hint="请输入用户名"
-=======
-                    android:hint="用户名"
->>>>>>> 860e96ac751a12758d69c58b10f2429efb6ea6fb
                     android:maxLines="1"
                     android:textSize="@dimen/textSize" />
             </TableRow>

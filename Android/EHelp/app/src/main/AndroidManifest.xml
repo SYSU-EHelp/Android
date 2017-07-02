@@ -93,6 +93,9 @@
         <activity android:name=".EmergencyHelpFinish"
             android:launchMode="singleTask"/>
 
+        <activity android:name=".HelpFinishActivity"
+            android:launchMode="singleTask"/>
+
     </application>
 
 </manifest>

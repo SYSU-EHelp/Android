@@ -23,6 +23,7 @@ import com.example.limin.ehelp.bean.UserBean;
 import com.example.limin.ehelp.bean.UserInfoBean;
 import com.example.limin.ehelp.networkservice.APITestActivity;
 import com.example.limin.ehelp.networkservice.ApiService;
+import com.example.limin.ehelp.networkservice.HelpDetailResult;
 import com.example.limin.ehelp.networkservice.UserInfoResult;
 import com.example.limin.ehelp.networkservice.UserResult;
 import com.example.limin.ehelp.utility.CurrentUser;
@@ -137,7 +138,7 @@ public class StateFragment extends Fragment {
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else if (userdata.launch.get(position).type == 1 && userdata.launch.get(position).finished == 1) {
-                        Intent intent = new Intent(getContext(), HelpDetailActivity.class);
+                        Intent intent = new Intent(getContext(), HelpFinishActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", userdata.launch.get(position).id);
                         intent.putExtras(bundle);
@@ -173,12 +174,21 @@ public class StateFragment extends Fragment {
                         startActivity(intent);
 
                     } else if (userdata.response.get(l).type == 1) {
-                        Intent intent = new Intent(getContext(), HelpDetailActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("id", userdata.response.get(l).id);
+                        if (userdata.response.get(l).finished == 0) {
+                            Intent intent = new Intent(getContext(), HelpDetailActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("id", userdata.response.get(l).id);
 
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(getContext(), HelpFinishActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("id", userdata.response.get(l).id);
+
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
                     }
                 }
 
