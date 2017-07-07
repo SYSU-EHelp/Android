@@ -94,6 +94,7 @@ public class Information extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 String input = et.getText().toString();
                                 upLoadInfo(mGender, input);
+                                mName = input;
                             }
                         })
                         .setNegativeButton("取消", null)
@@ -111,6 +112,7 @@ public class Information extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mSingleChoiceID = i;
+                        mGender = String.valueOf(i);
                     }
                 });
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -176,25 +178,6 @@ public class Information extends AppCompatActivity {
             }
         });
     }
-
-    /*private void RandomNG() {
-        name = (TextView)findViewById(R.id.name);
-        gender = (TextView)findViewById(R.id.gender);
-        float a = (float)(Math.random()*100);
-        if (a > 0 && a < 25) {
-            name.setText("胡南");
-            gender.setText("男");
-        } else if (a>25 && a < 50) {
-            name.setText("李敏慧");
-            gender.setText("女");
-        } else if (a>50 && a<75) {
-            name.setText("林国丹");
-            gender.setText("男");
-        } else if (a>75 && a < 100) {
-            name.setText("李为");
-            gender.setText("男");
-        }
-    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
