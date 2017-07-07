@@ -22,6 +22,7 @@ import com.example.limin.ehelp.networkservice.LoginResult;
 import com.example.limin.ehelp.networkservice.SimpleRequest;
 import com.example.limin.ehelp.utility.CurrentUser;
 import com.example.limin.ehelp.utility.ToastUtils;
+import com.example.limin.ehelp.MD5Util;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
                     SimpleRequest.getInstance().login(
                         MainActivity.this,
+                        //MD5Util.getInstance().getMD5(username.getText().toString().trim()),
                         username.getText().toString().trim(),
-                        password.getText().toString().trim(),
+                        MD5Util.getInstance().getMD5(password.getText().toString().trim()),
+                        //password.getText().toString().trim(),
                         new ApiServiceRequestResultHandler() {
                             @Override
                             public void onSuccess(Object dataBean) {

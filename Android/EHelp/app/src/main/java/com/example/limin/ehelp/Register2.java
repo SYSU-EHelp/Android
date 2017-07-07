@@ -56,7 +56,7 @@ public class Register2 extends AppCompatActivity {
                             code,
                             phone,
                             user.getText().toString().trim(),
-                            mima.getText().toString().trim());
+                            MD5Util.getInstance().getMD5(mima.getText().toString().trim()));
 
                     call.enqueue(new Callback<RegisterResult>() {
                         @Override
